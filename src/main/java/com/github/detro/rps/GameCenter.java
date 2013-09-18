@@ -2,7 +2,9 @@ package com.github.detro.rps;
 
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +32,18 @@ public class GameCenter {
 
     public Map<String, Match> getMatches() {
         return matches;
+    }
+
+    public List<Match> getMatches(String playerId) {
+        ArrayList<Match> result = new ArrayList<Match>();
+
+        for (Match match : matches.values()) {
+            if (match.containsPlayer(playerId)) {
+                result.add(match);
+            }
+        }
+
+        return result;
     }
 
     public boolean containsMatch(String matchId) {
