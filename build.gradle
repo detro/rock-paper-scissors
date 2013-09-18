@@ -1,0 +1,55 @@
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+project.buildDir = "gradle/build"
+
+repositories {
+    mavenCentral()
+}
+
+project.ext {
+    projectLongName         = "Rock-Paper-Scissors"
+    projectArtefactDir      = "jars/"
+    projectCreator          = "Ivan De Marino (https://github.com/detro)"
+
+    log4jVersion            = "1.2.17"
+    testngVersion           = "6.8.5"
+
+//    gsonVersion             = "2.2.4"
+//    guavaVersion            = "14.0.1"
+
+//    seleniumVersion         = "2.35.0"
+//    phantomjsdriverVersion  = "1.0.4"
+}
+
+dependencies {
+    compile "log4j:log4j:$log4jVersion"
+//    compile "com.google.code.gson:gson:$gsonVersion"
+//    compile "com.google.guava:guava:$guavaVersion"
+
+    testCompile "org.testng:testng:$testngVersion"
+//    testCompile "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
+//    testCompile "com.github.detro.ghostdriver:phantomjsdriver:$phantomjsdriverVersion"
+}
+
+tasks.withType(JavaExec) {
+    classpath = configurations.compile + sourceSets.test.output
+    args project.hasProperty("args") ? project.args.split("\\s") : []
+}
+
+test {
+    // TestNG specific options
+//    maxParallelForks = 4
+    useTestNG()
+
+    // Listening to test execution events
+    beforeTest { descriptor ->
+        logger.lifecycle("Running " + descriptor)
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "1.7"
+    jarFile = "gradle/gradle-wrapper.jar"
+}
