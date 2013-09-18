@@ -7,6 +7,8 @@ import java.util.Random;
  *
  * Useful to convert weapon indexes to weapon names, as well as
  * figuring out who wins.
+ *
+ * TODO Map error cases to different Exceptions: having all "RuntimeException" is very limiting in terms of error handling
  */
 public class Weapons {
     private static final String[] NAMES = new String[] {

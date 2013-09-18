@@ -7,6 +7,16 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This is a logical representation of a match between 2 players.
+ * It keeps track of the number of players, maintaining a useful
+ * status to know at which "point" in the game we are.
+ *
+ * It will be useful to represent the concept of "Room" where max 2 players are allowed
+ * to join and play.
+ *
+ * TODO Map error cases to different Exceptions: having all "RuntimeException" is very limiting in terms of error handling
+ */
 public class Match {
     private static final Logger LOG = Logger.getLogger(Match.class);
 
