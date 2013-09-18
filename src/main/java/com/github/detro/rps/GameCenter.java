@@ -2,10 +2,7 @@ package com.github.detro.rps;
 
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -30,8 +27,8 @@ public class GameCenter {
         }
     }
 
-    public Map<String, Match> getMatches() {
-        return matches;
+    public List<Match> getMatches() {
+        return new ArrayList<Match>(matches.values());
     }
 
     public List<Match> getMatches(String playerId) {
