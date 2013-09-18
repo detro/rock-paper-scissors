@@ -1,5 +1,7 @@
 package com.github.detro.rps;
 
+import java.util.Random;
+
 /**
  * Contains the list of weapons and the "A vs B" logic.
  *
@@ -19,10 +21,14 @@ public class Weapons {
             {  0,  2, -1}   //< 2 vs: 0, 1, 2
     };
 
-    private static void validateWeaponIdx(int weaponIdx) {
+    public static void validateWeaponIdx(int weaponIdx) {
         if (weaponIdx < 0 || weaponIdx > NAMES.length-1) {
             throw new RuntimeException("Invalid Weapon Index: " + weaponIdx);
         }
+    }
+
+    public static int weaponsAmount() {
+        return NAMES.length;
     }
 
     public static String getName(int weaponIdx) {
@@ -32,6 +38,10 @@ public class Weapons {
 
     public static String[] getNames() {
         return NAMES;
+    }
+
+    public static int pickRandomWeapon() {
+        return new Random().nextInt(weaponsAmount());
     }
 
     /**

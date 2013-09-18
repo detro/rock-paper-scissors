@@ -5,7 +5,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
+import static org.testng.AssertJUnit.assertNotNull;
 
 public class WeaponsTest {
 
@@ -48,5 +50,25 @@ public class WeaponsTest {
     @Test(dataProvider = "weaponIdxAndNameProvider")
     public void shouldReturnTheRightWeaponName(int weaponIdx, String weaponName) {
         assertEquals(Weapons.getName(weaponIdx), weaponName);
+    }
+
+    @Test
+    public void shouldBeAbleToPickARandomWeapon() {
+        int weapon;
+
+        for (int i = 1; i < 1000; ++i) {
+            weapon = Weapons.pickRandomWeapon();
+            assertTrue(weapon < Weapons.weaponsAmount());
+            assertNotNull(Weapons.getName(weapon));
+        }
+    }
+
+    @Test
+    public void shouldContainListOfWeaponNames() {
+        String[] weaponNames = Weapons.getNames();
+        assertEquals(weaponNames.length, Weapons.weaponsAmount());
+
+        int weapon = Weapons.pickRandomWeapon();
+        assertEquals(Weapons.getName(weapon), weaponNames[weapon]);
     }
 }
