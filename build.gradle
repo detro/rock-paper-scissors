@@ -17,6 +17,7 @@ project.ext {
 
     log4jVersion            = "1.2.17"
     testngVersion           = "6.8.5"
+    sparkCoreVersion        = "1.1"
 
 //    gsonVersion             = "2.2.4"
 //    guavaVersion            = "14.0.1"
@@ -26,6 +27,7 @@ project.ext {
 }
 
 dependencies {
+    compile "com.sparkjava:spark-core:$sparkCoreVersion"
     compile "log4j:log4j:$log4jVersion"
 //    compile "com.google.code.gson:gson:$gsonVersion"
 //    compile "com.google.guava:guava:$guavaVersion"
