@@ -9,7 +9,9 @@ repositories {
 }
 
 project.ext {
-    projectLongName         = "Rock-Paper-Scissors"
+    version                 = "1.0.0"
+    projectLongName         = "rock-paper-scissors"
+    archivesBaseName        = project.name
     projectArtefactDir      = "jars/"
     projectCreator          = "Ivan De Marino (https://github.com/detro)"
 
