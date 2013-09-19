@@ -9,20 +9,21 @@ repositories {
 }
 
 project.ext {
-    version                 = "1.0.0"
-    projectLongName         = "rock-paper-scissors"
-    archivesBaseName        = project.name
-    projectArtefactDir      = "jars/"
-    projectCreator          = "Ivan De Marino (https://github.com/detro)"
+    version             = "1.0.0"
+    projectLongName     = "rock-paper-scissors"
+    archivesBaseName    = project.name
+    projectArtefactDir  = "jars/"
+    projectCreator      = "Ivan De Marino (https://github.com/detro)"
 
-    log4jVersion            = "1.2.17"
-    testngVersion           = "6.8.5"
-    sparkCoreVersion        = "1.1"
+    log4jVersion        = "1.2.17"
+    testngVersion       = "6.8.5"
+    sparkCoreVersion    = "1.1"
+    httpclientVersion   = "3.1"
 
 //    gsonVersion             = "2.2.4"
 //    guavaVersion            = "14.0.1"
 
-//    seleniumVersion         = "2.35.0"
+    seleniumVersion         = "2.35.0"
 //    phantomjsdriverVersion  = "1.0.4"
 }
 
@@ -33,7 +34,8 @@ dependencies {
 //    compile "com.google.guava:guava:$guavaVersion"
 
     testCompile "org.testng:testng:$testngVersion"
-//    testCompile "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
+    testCompile "commons-httpclient:commons-httpclient:$httpclientVersion"
+    testCompile "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
 //    testCompile "com.github.detro.ghostdriver:phantomjsdriver:$phantomjsdriverVersion"
 }
 
