@@ -17,7 +17,7 @@ public class GameCenter {
         // nothing to do for now
     }
 
-    public void addMatch(Match newMatch) {
+    public synchronized void addMatch(Match newMatch) {
         if (!containsMatch(newMatch.getId())) {
             matches.put(newMatch.getId(), newMatch);
         } else {

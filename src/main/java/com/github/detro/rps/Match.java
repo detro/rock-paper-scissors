@@ -69,7 +69,7 @@ public class Match {
         return true;
     }
 
-    public void addPlayer(String playerId) {
+    public synchronized void addPlayer(String playerId) {
         // Add player to the match if we can
         if ((status & WAITING_FOR_ANOTHER_PLAYER) > 0) {
             if (!containsPlayer(playerId)) {
@@ -95,7 +95,7 @@ public class Match {
         LOG.debug(String.format("Added Player '%s' to Match '%s', now in status '%s'", playerId, id, status));
     }
 
-    public void setPlayerWeapon(String playerId, int weaponIdx) {
+    public synchronized void setPlayerWeapon(String playerId, int weaponIdx) {
         // Check player is part of this match
         if (!containsPlayer(playerId)) {
             String errMsg = String.format("Player '%s' is not part of Match '%s'", playerId, id);
