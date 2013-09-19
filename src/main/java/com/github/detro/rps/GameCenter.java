@@ -43,6 +43,18 @@ public class GameCenter {
         return result;
     }
 
+    public List<Match> getAvailableMatches(String playerId) {
+        ArrayList<Match> result = new ArrayList<Match>();
+
+        for (Match match : matches.values()) {
+            if ((match.getStatus() & Match.WAITING_FOR_ANOTHER_PLAYER) > 0 && !match.containsPlayer(playerId)) {
+                result.add(match);
+            }
+        }
+
+        return result;
+    }
+
     public boolean containsMatch(String matchId) {
         return matches.containsKey(matchId);
     }

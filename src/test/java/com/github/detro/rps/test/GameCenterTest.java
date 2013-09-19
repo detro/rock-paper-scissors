@@ -55,6 +55,40 @@ public class GameCenterTest {
 
         assertEquals(gCenter.getMatches("player1Id").size(), 2);
         assertEquals(gCenter.getMatches("player2Id").size(), 1);
+        assertEquals(gCenter.getMatches("player3Id").size(), 1);
+        assertEquals(gCenter.getMatches("player4Id").size(), 1);
         assertEquals(gCenter.getMatches("anotherPlayer").size(), 0);
+    }
+
+    @Test
+    public void shouldBeAbleToFindAllMatchesAPlayerCouldJoin() {
+        GameCenter gCenter = new GameCenter();
+
+        // Add 1 match without any user
+        Match match = new Match("seed1");
+        gCenter.addMatch(match);
+
+        // Add 1 match with a player "player1Id"
+        match = new Match("seed2");
+        match.addPlayer("player1Id");
+        gCenter.addMatch(match);
+
+        // Add 1 match with 2 players, one of which is also in another match
+        match = new Match("seed3");
+        match.addPlayer("player1Id");
+        match.addPlayer("player2Id");
+        gCenter.addMatch(match);
+
+        // Add 1 match with 2 players that are in no other match
+        match = new Match("seed4");
+        match.addPlayer("player3Id");
+        match.addPlayer("player4Id");
+        gCenter.addMatch(match);
+        System.out.println(match.getStatus());
+
+        assertEquals(gCenter.getAvailableMatches("player1Id").size(), 1);
+        assertEquals(gCenter.getAvailableMatches("player2Id").size(), 2);
+        assertEquals(gCenter.getAvailableMatches("player3Id").size(), 2);
+        assertEquals(gCenter.getAvailableMatches("player4Id").size(), 2);
     }
 }
