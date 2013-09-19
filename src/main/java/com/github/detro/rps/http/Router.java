@@ -1,10 +1,11 @@
-package com.github.detro.rps;
+package com.github.detro.rps.http;
 
+import com.github.detro.rps.GameCenter;
+import com.github.detro.rps.Match;
+import com.github.detro.rps.Weapons;
 import org.apache.log4j.Logger;
-
 import spark.Request;
 import spark.Response;
-import spark.Route;
 
 import java.util.List;
 
@@ -23,120 +24,93 @@ public class Router {
         setPort(port);
 
         // Returns Player ID
-        get(new Route("/myid") {
+        get(new JSONRoute("/myid") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP GET on '/myid' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
-
-                StringBuilder bodyBuilder = new StringBuilder();
-
-                bodyBuilder.append(String.format("{ \"id\" : \"%s\" }", req.session().id()));
+            public void process(Request req, Response res, StringBuilder resBody) {
+                // Return Player's ID
+                resBody.append(String.format("{ \"id\" : \"%s\" }", req.session().id()));
 
                 res.status(200);
-                return bodyBuilder.toString();
             }
         });
 
         // Returns list of Matches the Player is in
-        get(new Route("/mymatches") {
+        get(new JSONRoute("/mymatches") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP GET on '/mymatches' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
+            public void process(Request req, Response res, StringBuilder resBody) {
+                String playerId = req.session().id();
 
-                StringBuilder bodyBuilder = new StringBuilder();
-
-                List<Match> myMatches = gameCenter.getMatches(req.session().id());
-                bodyBuilder.append("[");
+                // List all Matches of a specific Player
+                List<Match> myMatches = gameCenter.getMatches(playerId);
+                resBody.append("[");
                 for (int i = 0, ilen = myMatches.size(); i < ilen; ++i) {
-                    bodyBuilder.append(matchToJSON(myMatches.get(i), req.session().id()));
+                    resBody.append(matchToJSON(myMatches.get(i), playerId));
                     if (i + 1 != ilen) {
-                        bodyBuilder.append(" , ");
+                        resBody.append(" , ");
                     }
                 }
-                bodyBuilder.append("]");
+                resBody.append("]");
 
                 res.status(200);
-                return bodyBuilder.toString();
             }
         });
 
         // Returns list of available Weapons
-        get(new Route("/weapons") {
+        get(new JSONRoute("/weapons") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP GET on '/weapons' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
-
-                StringBuilder bodyBuilder = new StringBuilder();
-
-                bodyBuilder.append("[");
+            public void process(Request req, Response res, StringBuilder resBody) {
+                // List all the Weapons
+                resBody.append("[");
                 for (int i = 0, ilen = Weapons.weaponsAmount(); i < ilen; ++i) {
-                    bodyBuilder.append("\"" + Weapons.getName(i) + "\"");
+                    resBody.append("\"" + Weapons.getName(i) + "\"");
                     if (i + 1 != ilen) {
-                        bodyBuilder.append(" , ");
+                        resBody.append(" , ");
                     }
                 }
-                bodyBuilder.append("]");
+                resBody.append("]");
 
                 res.status(200);
-                return bodyBuilder.toString();
             }
         });
 
         // Return list of all Matches
-        get(new Route("/matches") {
+        get(new JSONRoute("/matches") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP GET on '/matches' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
-
-                StringBuilder bodyBuilder = new StringBuilder();
-
+            public void process(Request req, Response res, StringBuilder resBody) {
+                // List all the Matches
                 List<Match> myMatches = gameCenter.getMatches();
-                bodyBuilder.append("[");
+                resBody.append("[");
                 for (int i = 0, ilen = myMatches.size(); i < ilen; ++i) {
-                    bodyBuilder.append(matchToJSON(myMatches.get(i), req.session().id()));
+                    resBody.append(matchToJSON(myMatches.get(i), req.session().id()));
                     if (i + 1 != ilen) {
-                        bodyBuilder.append(" , ");
+                        resBody.append(" , ");
                     }
                 }
-                bodyBuilder.append("]");
+                resBody.append("]");
 
                 res.status(200);
-                return bodyBuilder.toString();
             }
         });
 
         // Creates a new Player vs Player Match
-        post(new Route("/match/pvp") {
+        post(new JSONRoute("/match/pvp") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP POST on '/match/pvp' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
+            public void process(Request req, Response res, StringBuilder resBody) {
+                String playerId = req.session().id();
 
-                Match newMatch = new Match(req.session().id());
+                // Create and register the new Match
+                Match newMatch = new Match(playerId);
                 gameCenter.addMatch(newMatch);
+                resBody.append(matchToJSON(newMatch, playerId));
 
                 res.status(200);
-                return matchToJSON(newMatch, req.session().id());
             }
         });
 
         // Get Match info by Id
-        get(new Route("/match/:matchId") {
+        get(new JSONRoute("/match/:matchId") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP GET on '/match/:matchId' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
-
+            public void process(Request req, Response res, StringBuilder resBody) {
                 // Fetch match info
                 Match match = null;
                 try {
@@ -145,21 +119,19 @@ public class Router {
                     // Match not found
                     LOG.error(re.getMessage());
                     res.status(404);
-                    return "";
+                    return;
                 }
 
+                resBody.append(matchToJSON(match, req.session().id()));
                 res.status(200);
-                return matchToJSON(match, req.session().id());
             }
         });
 
         // Join a Match
-        put(new Route("/match/:matchId/join") {
+        put(new JSONRoute("/match/:matchId/join") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP PUT on '/match/:matchId/join' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
+            public void process(Request req, Response res, StringBuilder resBody) {
+                String playerId = req.session().id();
 
                 // Fetch match info
                 Match match = null;
@@ -169,32 +141,28 @@ public class Router {
                     // Match not found
                     LOG.error(re.getMessage());
                     res.status(404);
-                    return "";
+                    return;
                 }
 
                 // Add Player to Match
                 try {
-                    match.addPlayer(req.session().id());
+                    match.addPlayer(playerId);
                 } catch(RuntimeException re) {
                     // Player couldn't be added to Match
                     LOG.error(re.getMessage());
                     res.status(403);
-                    return "";
+                    return;
                 }
 
+                resBody.append(matchToJSON(match, playerId));
                 res.status(200);
-                return matchToJSON(match, req.session().id());
             }
         });
 
         // Set Weapon in Match
-        put(new Route("/match/:matchId/weapon/:weaponId") {
+        put(new JSONRoute("/match/:matchId/weapon/:weaponId") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP PUT on '/match/:matchId/weapon/:weaponId' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
-
+            public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
                 String matchId = req.params(":matchId");
                 int weaponId;
@@ -203,7 +171,7 @@ public class Router {
                 } catch(NumberFormatException nfe) {
                     LOG.error(String.format("Weapon '%s' is invalid", req.params(":weaponId")));
                     res.status(400);
-                    return "";
+                    return;
                 }
 
                 // Fetch match info
@@ -214,14 +182,14 @@ public class Router {
                     // Match not found
                     LOG.error(re.getMessage());
                     res.status(404);
-                    return "";
+                    return;
                 }
 
                 // Check if Player is part of the Match first
                 if (!match.containsPlayer(playerId)) {
                     LOG.error(String.format("Player '%s' is not part of Match '%s'", playerId, matchId));
                     res.status(403);
-                    return "";
+                    return;
                 }
 
                 // Set Player Weapon for the given Match
@@ -231,22 +199,18 @@ public class Router {
                     // Player couldn't set the Weapon
                     LOG.error(re.getMessage());
                     res.status(403);
-                    return "";
+                    return;
                 }
 
+                resBody.append(matchToJSON(match, req.session().id()));
                 res.status(200);
-                return matchToJSON(match, req.session().id());
             }
         });
 
         // Reset Match
-        put(new Route("/match/:matchId/reset") {
+        put(new JSONRoute("/match/:matchId/reset") {
             @Override
-            public Object handle(Request req, Response res) {
-                res.header("content-type", "application/json");
-                req.session(true);
-                LOG.debug(String.format("HTTP PUT on '/match/:matchId/reset' - Session '%s' (new: %b)", req.session().id(), req.session().isNew()));
-
+            public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
                 String matchId = req.params(":matchId");
 
@@ -258,21 +222,21 @@ public class Router {
                     // Match not found
                     LOG.error(re.getMessage());
                     res.status(404);
-                    return "";
+                    return;
                 }
 
                 // Check if Player is part of the Match first
                 if (!match.containsPlayer(playerId)) {
                     LOG.error(String.format("Player '%s' is not part of Match '%s'", playerId, matchId));
                     res.status(403);
-                    return "";
+                    return;
                 }
 
                 // Reset this match
                 match.reset();
 
+                resBody.append(matchToJSON(match, req.session().id()));
                 res.status(200);
-                return matchToJSON(match, req.session().id());
             }
         });
     }
