@@ -148,15 +148,18 @@ public class Match {
     }
 
     public void reset() {
-        // Clear Player's weapons
-        for (String playerId : playersAndWeapons.keySet()) {
-            playersAndWeapons.put(playerId, NO_WEAPON_YET);
+        // Reset match only if both players are there
+        if ((status & (WAITING_PLAYERS_WEAPONS | PLAYED)) > 0) {
+            // Clear Player's weapons
+            for (String playerId : playersAndWeapons.keySet()) {
+                playersAndWeapons.put(playerId, NO_WEAPON_YET);
+            }
+
+            // Set the status back to WAITING_PLAYERS_WEAPONS
+            status = WAITING_PLAYERS_WEAPONS;
+
+            LOG.debug(String.format("Match '%s' was reset: ready for new weapons", id));
         }
-
-        // Set the status back to WAITING_PLAYERS_WEAPONS
-        status = WAITING_PLAYERS_WEAPONS;
-
-        LOG.debug(String.format("Match '%s' was reset: ready for new weapons", id));
     }
 
     private static String sha1(String input) {
