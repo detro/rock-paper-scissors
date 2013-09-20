@@ -79,10 +79,10 @@ public class RouterTest {
             String body = new String(createMatch.getResponseBody());
             assertTrue(body.startsWith("{"));
             assertTrue(body.endsWith("}"));
-            assertTrue(body.contains("\"matchId\""));
+            assertTrue(body.contains("\"id\""));
 
             // Extract Match ID from response body
-            Pattern pattern = Pattern.compile("\"matchId\" : \"(\\p{XDigit}+)\"");
+            Pattern pattern = Pattern.compile("\"id\" : \"(\\p{XDigit}+)\"");
             Matcher matcher = pattern.matcher(body);
             assertTrue(matcher.find());
             String matchId = matcher.group(1);

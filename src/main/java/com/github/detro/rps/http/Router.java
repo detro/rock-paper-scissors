@@ -215,7 +215,7 @@ public class Router {
         // TODO Introduce Gson (or something similar) to generate those JSONs: this is ugly!
         StringBuilder builder = new StringBuilder();
 
-        builder.append(String.format("{ \"matchId\" : \"%s\" , \"status\" : %d , \"players\" : %d ",
+        builder.append(String.format("{ \"id\" : \"%s\" , \"status\" : %d , \"players\" : %d ",
                 match.getId(),
                 match.getStatus(),
                 match.playersAmount()));
