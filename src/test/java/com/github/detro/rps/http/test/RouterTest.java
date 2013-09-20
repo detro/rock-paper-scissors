@@ -4,6 +4,7 @@ import com.github.detro.rps.Match;
 import com.github.detro.rps.Weapons;
 import com.github.detro.rps.http.Router;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
@@ -58,39 +59,20 @@ public class RouterTest {
     }
 
     @Test
-    public void shouldReturnPlayerId() {
-        HttpClient client = new HttpClient();
-        GetMethod getMyId = new GetMethod(BASEURL + "/myid");
-        try {
-            // execute and check status code
-            int statusCode = client.executeMethod(getMyId);
-            assertEquals(statusCode, 200);
-
-            // check response body
-            String body = new String(getMyId.getResponseBody());
-            assertTrue(body.startsWith("{"));
-            assertTrue(body.endsWith("}"));
-            assertTrue(body.contains("\"id\""));
-        } catch (IOException ioe) {
-            fail();
-        } finally {
-            getMyId.releaseConnection();
-        }
-    }
-
-    @Test
     public void shouldAllowToPlayAMatch() {
         HttpClient client1 = new HttpClient();
         HttpClient client2 = new HttpClient();
         PostMethod createMatch = null;
         PutMethod joinMatch = null;
         PutMethod setWeapon = null;
+        PutMethod resetMatch = null;
         GetMethod getMatchInfo = null;
 
         // Create a Match
         try {
             // First Player creates the match
-            createMatch = new PostMethod(BASEURL + "/match/pvp");
+            createMatch = new PostMethod(BASEURL + "/match");
+            createMatch.setParameter("kind", "pvp");
             assertEquals(client1.executeMethod(createMatch), 200);
 
             // check response body
@@ -106,18 +88,23 @@ public class RouterTest {
             String matchId = matcher.group(1);
 
             // First Player joins the match
-            joinMatch = new PutMethod(BASEURL + "/match/" + matchId + "/join");
+            joinMatch = new PutMethod(BASEURL + "/match/" + matchId);
+            joinMatch.setQueryString(new NameValuePair[] { new NameValuePair("action", "join")});
             assertEquals(client1.executeMethod(joinMatch), 200);
 
             // Second Player joins the match
             assertEquals(client2.executeMethod(joinMatch), 200);
 
             // First and Second Player set the same weapon
-            setWeapon = new PutMethod(BASEURL + "/match/" + matchId + "/weapon/1");
+            setWeapon = new PutMethod(BASEURL + "/match/" + matchId);
+            setWeapon.setQueryString(new NameValuePair[] {
+                    new NameValuePair("action", "weapon"),
+                    new NameValuePair("weaponid", "1")
+            });
             assertEquals(client1.executeMethod(setWeapon), 200);
             assertEquals(client2.executeMethod(setWeapon), 200);
 
-            // Check Match is ready to be played
+            // Check Match is has now been played
             getMatchInfo = new GetMethod(BASEURL + "/match/" + matchId);
             assertEquals(client1.executeMethod(getMatchInfo), 200);
             body = new String(getMatchInfo.getResponseBody());
@@ -133,12 +120,29 @@ public class RouterTest {
             matcher = pattern.matcher(body);
             assertTrue(matcher.find());
             assertEquals(matcher.group(1), "draw");
+
+            // Reset the Match
+            resetMatch = new PutMethod(BASEURL + "/match/" + matchId);
+            resetMatch.setQueryString(new NameValuePair[] { new NameValuePair("action", "reset")});
+            assertEquals(client2.executeMethod(resetMatch), 200);
+
+            // Check Match is has now been reset
+            getMatchInfo = new GetMethod(BASEURL + "/match/" + matchId);
+            assertEquals(client2.executeMethod(getMatchInfo), 200);
+            body = new String(getMatchInfo.getResponseBody());
+
+            // Extract the Match status
+            pattern = Pattern.compile("\"status\" : ([0-9])");
+            matcher = pattern.matcher(body);
+            assertTrue(matcher.find());
+            assertEquals(Integer.parseInt(matcher.group(1)), Match.WAITING_PLAYERS_WEAPONS);
         } catch (IOException ioe) {
             fail();
         } finally {
             if (createMatch != null) createMatch.releaseConnection();
             if (joinMatch != null) joinMatch.releaseConnection();
             if (setWeapon != null) setWeapon.releaseConnection();
+            if (resetMatch != null) resetMatch.releaseConnection();
             if (getMatchInfo != null) getMatchInfo.releaseConnection();
         }
     }

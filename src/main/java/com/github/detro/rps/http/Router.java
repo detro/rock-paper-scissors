@@ -23,38 +23,6 @@ public class Router {
     public void listen(int port) {
         setPort(port);
 
-        // Returns Player ID
-        get(new JSONRoute("/myid") {
-            @Override
-            public void process(Request req, Response res, StringBuilder resBody) {
-                // Return Player's ID
-                resBody.append(String.format("{ \"id\" : \"%s\" }", req.session().id()));
-
-                res.status(200);
-            }
-        });
-
-        // Returns list of Matches the Player is in
-        get(new JSONRoute("/mymatches") {
-            @Override
-            public void process(Request req, Response res, StringBuilder resBody) {
-                String playerId = req.session().id();
-
-                // List all Matches of a specific Player
-                List<Match> myMatches = gameCenter.getMatches(playerId);
-                resBody.append("[");
-                for (int i = 0, ilen = myMatches.size(); i < ilen; ++i) {
-                    resBody.append(matchToJSON(myMatches.get(i), playerId));
-                    if (i + 1 != ilen) {
-                        resBody.append(" , ");
-                    }
-                }
-                resBody.append("]");
-
-                res.status(200);
-            }
-        });
-
         // Returns list of available Weapons
         get(new JSONRoute("/weapons") {
             @Override
@@ -63,9 +31,9 @@ public class Router {
                 resBody.append("[");
                 for (int i = 0, ilen = Weapons.weaponsAmount(); i < ilen; ++i) {
                     resBody.append("\"" + Weapons.getName(i) + "\"");
-                    if (i + 1 != ilen) {
-                        resBody.append(" , ");
-                    }
+
+                    // Append "comma" if needed
+                    resBody.append(i + 1 != ilen ? " , " : "");
                 }
                 resBody.append("]");
 
@@ -73,18 +41,34 @@ public class Router {
             }
         });
 
-        // Return list of all Matches
+        // Return list of Matches
         get(new JSONRoute("/matches") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
-                // List all the Matches
-                List<Match> myMatches = gameCenter.getMatches();
+                String playerId = req.session().id();
+                String type = req.queryParams("type");
+                List<Match> matches = null;
+
+                // Fetch a list of matches, based on the requested type
+                if (type == null || type.equals("all")) {
+                    matches = gameCenter.getMatches();
+                } else if (type.equals("mine")) {
+                    matches = gameCenter.getMatches(playerId);
+                } else if (type.equals("available")) {
+                    matches = gameCenter.getAvailableMatches(playerId);
+                } else {
+                    LOG.error(String.format("Invalid parameter: %s=%s", "type", type));
+                    res.status(400);
+                    return;
+                }
+
                 resBody.append("[");
-                for (int i = 0, ilen = myMatches.size(); i < ilen; ++i) {
-                    resBody.append(matchToJSON(myMatches.get(i), req.session().id()));
-                    if (i + 1 != ilen) {
-                        resBody.append(" , ");
-                    }
+                for (int i = 0, ilen = matches.size(); i < ilen; ++i) {
+                    // Append Match->JSON to Response Body
+                    resBody.append(matchToJSON(matches.get(i), playerId));
+
+                    // Append "comma" if needed
+                    resBody.append(i + 1 != ilen ? " , " : "");
                 }
                 resBody.append("]");
 
@@ -92,14 +76,25 @@ public class Router {
             }
         });
 
-        // Creates a new Player vs Player Match
-        post(new JSONRoute("/match/pvp") {
+        // Creates a new Match
+        post(new JSONRoute("/match") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
+                String kind = req.queryParams("kind");
+                Match newMatch = null;
 
-                // Create and register the new Match
-                Match newMatch = new Match(playerId);
+                if (kind == null || kind.equals("pvp")) {
+                    newMatch = new Match(playerId);
+                } else if (kind.equals("pvc")) {
+                    // TODO Create a new Match type for PvC (Player vs Computer)
+                } else {
+                    LOG.error(String.format("Invalid parameter: %s=%s", "kind", kind));
+                    res.status(400);
+                    return;
+                }
+
+                // Register the new Match
                 gameCenter.addMatch(newMatch);
                 resBody.append(matchToJSON(newMatch, playerId));
 
@@ -107,7 +102,7 @@ public class Router {
             }
         });
 
-        // Get Match info by Id
+        // Get Match by Id
         get(new JSONRoute("/match/:matchId") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
@@ -127,16 +122,18 @@ public class Router {
             }
         });
 
-        // Join a Match
-        put(new JSONRoute("/match/:matchId/join") {
+        // Execute action on a Match
+        put(new JSONRoute("/match/:matchId") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
+                String matchId = req.params(":matchId");
+                String action = req.queryParams("action");
 
                 // Fetch match info
-                Match match = null;
+                Match match;
                 try {
-                    match = gameCenter.getMatch(req.params(":matchId"));
+                    match = gameCenter.getMatch(matchId);
                 } catch(RuntimeException re) {
                     // Match not found
                     LOG.error(re.getMessage());
@@ -144,98 +141,64 @@ public class Router {
                     return;
                 }
 
-                // Add Player to Match
-                try {
-                    match.addPlayer(playerId);
-                } catch(RuntimeException re) {
-                    // Player couldn't be added to Match
-                    LOG.error(re.getMessage());
-                    res.status(403);
+                if (action == null) {
+                    LOG.error(String.format("Invalid parameter: %s=%s", "action", action));
+                    res.status(400);
                     return;
-                }
+                } else if (action.equals("join")) {
+                    // Add Player to Match
+                    try {
+                        match.addPlayer(playerId);
+                    } catch(RuntimeException re) {
+                        // Player couldn't be added to Match
+                        LOG.error(re.getMessage());
+                        res.status(403);
+                        return;
+                    }
+                } else if (action.equals("weapon")) {
+                    // Check if Player is part of the Match first
+                    if (!match.containsPlayer(playerId)) {
+                        LOG.error(String.format("Player '%s' is not part of Match '%s'", playerId, matchId));
+                        res.status(403);
+                        return;
+                    }
 
-                resBody.append(matchToJSON(match, playerId));
-                res.status(200);
-            }
-        });
+                    // Parse the Weapon ID
+                    int weaponId;
+                    try {
+                        weaponId = Integer.parseInt(req.queryParams("weaponid"));
+                    } catch(NumberFormatException nfe) {
+                        LOG.error(String.format("Weapon '%s' is invalid", req.queryParams("weaponid")));
+                        res.status(400);
+                        return;
+                    }
 
-        // Set Weapon in Match
-        put(new JSONRoute("/match/:matchId/weapon/:weaponId") {
-            @Override
-            public void process(Request req, Response res, StringBuilder resBody) {
-                String playerId = req.session().id();
-                String matchId = req.params(":matchId");
-                int weaponId;
-                try {
-                    weaponId = Integer.parseInt(req.params(":weaponId"));
-                } catch(NumberFormatException nfe) {
-                    LOG.error(String.format("Weapon '%s' is invalid", req.params(":weaponId")));
+                    // Set Player Weapon for the given Match
+                    try {
+                        match.setPlayerWeapon(playerId, weaponId);
+                    } catch(RuntimeException re) {
+                        // Player couldn't set the Weapon
+                        LOG.error(re.getMessage());
+                        res.status(403);
+                        return;
+                    }
+                } else if (action.equals("reset")) {
+                    // Check if Player is part of the Match first
+                    if (!match.containsPlayer(playerId)) {
+                        LOG.error(String.format("Player '%s' is not part of Match '%s'", playerId, matchId));
+                        res.status(403);
+                        return;
+                    }
+
+                    // Reset this match
+                    match.reset();
+                } else {
+                    LOG.error(String.format("Invalid parameter: %s=%s", "action", action));
                     res.status(400);
                     return;
                 }
 
-                // Fetch match info
-                Match match = null;
-                try {
-                    match = gameCenter.getMatch(matchId);
-                } catch(RuntimeException re) {
-                    // Match not found
-                    LOG.error(re.getMessage());
-                    res.status(404);
-                    return;
-                }
-
-                // Check if Player is part of the Match first
-                if (!match.containsPlayer(playerId)) {
-                    LOG.error(String.format("Player '%s' is not part of Match '%s'", playerId, matchId));
-                    res.status(403);
-                    return;
-                }
-
-                // Set Player Weapon for the given Match
-                try {
-                    match.setPlayerWeapon(playerId, weaponId);
-                } catch(RuntimeException re) {
-                    // Player couldn't set the Weapon
-                    LOG.error(re.getMessage());
-                    res.status(403);
-                    return;
-                }
-
-                resBody.append(matchToJSON(match, req.session().id()));
-                res.status(200);
-            }
-        });
-
-        // Reset Match
-        put(new JSONRoute("/match/:matchId/reset") {
-            @Override
-            public void process(Request req, Response res, StringBuilder resBody) {
-                String playerId = req.session().id();
-                String matchId = req.params(":matchId");
-
-                // Fetch match info
-                Match match = null;
-                try {
-                    match = gameCenter.getMatch(matchId);
-                } catch(RuntimeException re) {
-                    // Match not found
-                    LOG.error(re.getMessage());
-                    res.status(404);
-                    return;
-                }
-
-                // Check if Player is part of the Match first
-                if (!match.containsPlayer(playerId)) {
-                    LOG.error(String.format("Player '%s' is not part of Match '%s'", playerId, matchId));
-                    res.status(403);
-                    return;
-                }
-
-                // Reset this match
-                match.reset();
-
-                resBody.append(matchToJSON(match, req.session().id()));
+                resBody.append(matchToJSON(match, playerId));
                 res.status(200);
             }
         });
