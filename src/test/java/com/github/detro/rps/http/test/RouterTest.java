@@ -23,7 +23,7 @@ import static org.testng.Assert.*;
 public class RouterTest {
     private static final int PORT = PortProber.findFreePort();
     private static final Router ROUTER = new Router();
-    private static final String BASEURL = "http://localhost:" + PORT;
+    private static final String BASEURL = "http://localhost:" + PORT + Router.API_PATH;
 
     @BeforeClass
     public static void startRouter() {

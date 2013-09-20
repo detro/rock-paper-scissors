@@ -17,6 +17,9 @@ import static spark.Spark.*;
 public class Router {
     private static final Logger LOG = LoggerFactory.getLogger(Router.class);
 
+    public static final String WEBSITE_RESOURCE_PATH    = "/public";
+    public static final String API_PATH                 = "/api";
+
     private final GameCenter gameCenter = new GameCenter();
 
     public Router() {
@@ -25,9 +28,10 @@ public class Router {
 
     public void listen(int port) {
         setPort(port);
+        staticFileLocation(WEBSITE_RESOURCE_PATH);
 
         // Returns list of available Weapons
-        get(new JSONRoute("/weapons") {
+        get(new JSONRoute(API_PATH + "/weapons") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 // List all the Weapons
@@ -45,7 +49,7 @@ public class Router {
         });
 
         // Return list of Matches
-        get(new JSONRoute("/matches") {
+        get(new JSONRoute(API_PATH + "/matches") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
@@ -80,7 +84,7 @@ public class Router {
         });
 
         // Creates a new Match
-        post(new JSONRoute("/match") {
+        post(new JSONRoute(API_PATH + "/match") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
@@ -106,7 +110,7 @@ public class Router {
         });
 
         // Get Match by Id
-        get(new JSONRoute("/match/:matchId") {
+        get(new JSONRoute(API_PATH + "/match/:matchId") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 // Fetch match info
@@ -126,7 +130,7 @@ public class Router {
         });
 
         // Execute action on a Match
-        put(new JSONRoute("/match/:matchId") {
+        put(new JSONRoute(API_PATH + "/match/:matchId") {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
