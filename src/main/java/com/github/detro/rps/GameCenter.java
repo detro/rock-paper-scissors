@@ -1,6 +1,7 @@
 package com.github.detro.rps;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -9,7 +10,7 @@ import java.util.*;
  * TODO Map error cases to different Exceptions: having all "RuntimeException" is very limiting in terms of error handling
  */
 public class GameCenter {
-    private static final Logger LOG = Logger.getLogger(GameCenter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GameCenter.class);
 
     private final Map<String, Match> matches = new HashMap<String, Match>();
 

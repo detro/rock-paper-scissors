@@ -3,7 +3,10 @@ package com.github.detro.rps.http;
 import com.github.detro.rps.GameCenter;
 import com.github.detro.rps.Match;
 import com.github.detro.rps.Weapons;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import spark.Request;
 import spark.Response;
 
@@ -12,7 +15,7 @@ import java.util.List;
 import static spark.Spark.*;
 
 public class Router {
-    private static final Logger LOG = Logger.getLogger(Router.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Router.class);
 
     private final GameCenter gameCenter = new GameCenter();
 

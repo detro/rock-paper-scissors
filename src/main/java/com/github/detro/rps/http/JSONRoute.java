@@ -1,13 +1,15 @@
 package com.github.detro.rps.http;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 
 public abstract class JSONRoute extends Route {
-    private static final Logger LOG = Logger.getLogger(JSONRoute.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JSONRoute.class);
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
 

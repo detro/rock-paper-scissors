@@ -1,6 +1,8 @@
 package com.github.detro.rps;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MarkerFactory;
 
 import java.security.MessageDigest;
 import java.util.Formatter;
@@ -18,7 +20,7 @@ import java.util.Map;
  * TODO Map error cases to different Exceptions: having all "RuntimeException" is very limiting in terms of error handling
  */
 public class Match {
-    private static final Logger LOG = Logger.getLogger(Match.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Match.class);
 
     private final String id;
 
@@ -180,7 +182,7 @@ public class Match {
             result = f.toString();
             f.close();
         } catch (Exception e) {
-            LOG.fatal("Couldn't Hash a String with SHA-1");
+            LOG.error(MarkerFactory.getMarker("FATAL"), "Couldn't Hash a String with SHA-1");
             System.exit(1);
         }
 
