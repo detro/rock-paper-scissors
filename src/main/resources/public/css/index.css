@@ -1,0 +1,163 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+}
+body {
+    color: #333;
+}
+a {
+    text-decoration: none;
+}
+
+/* LAYOUT CSS */
+#layout {
+    padding-left: 500px; /* "left col (nav + list)" width */
+    position: relative;
+}
+#nav, #list {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+}
+#nav {
+    margin-left: -500px; /* "left col (nav + list)" width */
+    width: 200px;
+    background: #222;
+    text-align: center;
+    padding: 2em 0;
+    color: #ddd;
+}
+#list {
+    margin-left: -300px;
+    width: 300px;
+    border-right: 1px solid #ccc;
+    overflow: auto;
+}
+
+/* Vertical Navigation Styles */
+#nav #title {
+    font-size: 1.5em;
+    margin: 0.2em 1em;
+    text-align: center;
+}
+#nav .pure-menu {
+    background: transparent;
+    border: none;
+    text-align: left;
+}
+#nav .pure-menu-heading {
+    border-bottom: none;
+    font-size: 1.2em;
+    color: #0078e7;
+    text-align: right;
+}
+#nav .nav-menu-button {
+    display: none;
+}
+#nav .pure-menu ul {
+    text-align: right;
+}
+#nav .pure-menu li a matches-num {
+    font-weight: bold;
+    color: white;
+    font-size: 110%;
+}
+#nav .pure-menu .pure-menu-selected {
+    background: #888;
+}
+
+/* Matches List Styles */
+#list .match-item {
+    -webkit-transition: border-width .20s ease-out, background-color .20s ease-out;
+    -moz-transition: border-width .20s ease-out, background-color .20s ease-out;
+    -o-transition: border-width .20s ease-out, background-color .20s ease-out;
+    transition: border-width .20s ease-out, background-color .20s ease-out;
+}
+#list .match-item-selected {
+    background: #dbedff;
+    border-left: 3px solid #0078e7;
+    padding-left: -3px;
+}
+#list .match-item .match-info {
+    font-size: 0.7em;
+}
+#list .match-item .match-info ul {
+    list-style: none;
+}
+#list .match-item .match-status {
+    font-size: 2em;
+    text-align: center;
+}
+
+/* Current Match Styles */
+#main .match-content .match-header {
+    background: #222;
+    color: #ddd;
+}
+#main .match-content .match-status {
+    font-size: 4em;
+    text-align: center;
+}
+#main .match-content .match-info ul {
+    list-style: none;
+}
+#main .match-content .match-body {
+    text-align: center;
+    padding: 0.5em;
+}
+
+@media (max-width: 867px) {
+
+    #list,
+    #main {
+        width: 100%;
+    }
+    #layout {
+        padding-left: -200px;
+    }
+    #list {
+        height: 33%;
+        border-right: 0;
+        border-bottom: 1px solid #ddd;
+    }
+    #main {
+        position: fixed;
+        top: 33%;
+        right: 0;
+        bottom: 0;
+        left: 200px;
+        overflow: auto;
+        width: auto; /* so that it's not 100% */
+    }
+}
+
+@media (max-width: 480px) {
+    #layout, #nav, #list, #main {
+        position: static;
+        margin: 0;
+        padding: 0;
+    }
+    #nav {
+        width: 100%;
+        height: 60px;
+        position: relative;
+        overflow: hidden;
+    }
+    #nav #title {
+        font-size: 14px;
+        padding: 5px 0;
+    }
+    #nav .nav-menu-button {
+        display: block;
+        top: 10px;
+        right: 10px;
+        position: absolute;
+        height: 40px;
+    }
+    #main {
+        width: 100%;
+    }
+}
