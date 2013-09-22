@@ -29,24 +29,35 @@
                 <h1 id="title">Rock<br>Paper<br>Scissors</h1>
 
                 <div class="nav-inner">
-                    <button id="new-match-button" class="pure-button pure-button-primary">New Match</button>
+                    <p>
+                        <i class="icon-plus"></i> New Match
+                    </p>
+                    <p>
+                        <button id="new-match-pvp-button" class="pure-button pure-button-primary">
+                            <i class="icon-user"></i>
+                        </button>
+                        <button id="new-match-pvc-button" class="pure-button pure-button-primary">
+                            <i class="icon-desktop"></i>
+                        </button>
+                    </p>
 
-                    <div class="pure-menu pure-menu-open">
+
+                    <div id="matches-menu" class="pure-menu pure-menu-open">
                         <span class="pure-menu-heading"><i class="icon-bar-chart"></i> Matches</span>
                         <ul>
-                            <li class="pure-menu-selected">
-                                <a href="#" id="available-matches">
+                            <li>
+                                <a href="#" class="available">
                                     Available Matches <span class="matches-num">-</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" id="my-matches">
-                                   My Matches <span  class="matches-num">-</span>
+                                <a href="#" class="mine">
+                                    My Matches <span  class="matches-num">-</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" id="total-matches">
-                                    Total Matches <span class="matches-num">-</span>
+                                <a href="#" class="all">
+                                    All Matches <span class="matches-num">-</span>
                                 </a>
                             </li>
                         </ul>
@@ -55,78 +66,11 @@
             </div>
 
             <div class="pure-u-1" id="list">
-                <div class="match-item match-item-selected pure-g">
-                    <div class="match-status pure-u-1-6">
-                        <i class="icon-coffee"></i>
-                    </div>
-
-                    <div class="match-info pure-u-5-6">
-                        <ul>
-                            <li><strong>Match ID:</strong> <span class="match-id">89J20DSALKJ209DSALKJ009</span></li>
-                            <li><strong>Players:</strong> <span class="match-players">1</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="match-item pure-g">
-                    <div class="match-status pure-u-1-6">
-                        <i class="icon-user"></i>
-                    </div>
-
-                    <div class="match-info pure-u-5-6">
-                        <ul>
-                            <li><strong>Match ID:</strong> <span class="match-id">NMBCXVNDSKAJOI289838933</span></li>
-                            <li><strong>Players:</strong> <span class="match-players">0</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="match-item pure-g">
-                    <div class="match-status pure-u-1-6">
-                        <i class="icon-coffee"></i>
-                    </div>
-
-                    <div class="match-info pure-u-5-6">
-                        <ul>
-                            <li><strong>Match ID:</strong> <span class="match-id">NMBCXVNDSKAJOI289838933</span></li>
-                            <li><strong>Players:</strong> <span class="match-players">0</span></li>
-                        </ul>
-                    </div>
-                </div>
+                Loading...
             </div>
 
             <div class="pure-u-1" id="main">
-                <div class="match-content">
-                    <div class="match-header pure-g">
-                        <div class="match-status pure-u-1-5">
-                            <i class="icon-user"></i>
-                        </div>
-
-                        <div class="match-info pure-u-4-5">
-                            <ul>
-                                <li><strong>Match ID:</strong> <span class="match-id">NMBCXVNDSKAJOI289838933</span></li>
-                                <li><strong>Players:</strong> <span class="match-players">0</span></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="match-body">
-                        <button class="pure-button pure-button-primary"><i class="icon-gamepad"></i> JOIN</button>
-
-                        <hr>
-
-                        <button class="pure-button">paper</button>
-                        <button class="pure-button">scissors</button>
-                        <button class="pure-button">rock</button>
-
-                        <hr>
-
-                        <h2><i class="icon-spinner icon-spin icon-large"></i> Waiting Player</h2>
-                        <h2>Choose Weapon</h2>
-                        <h2><i class="icon-spinner icon-spin icon-large"></i> Waiting Player</h2>
-                        <h2>You Won</h2>
-                    </div>
-                </div>
+                Choose a match...
             </div>
         </div>
     </body>
