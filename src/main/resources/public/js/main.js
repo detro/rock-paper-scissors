@@ -10,6 +10,10 @@ rps.main.Collections = {
 rps.main.MGame = new rps.models.Game();
 
 $(document).ready(function() {
+    // Wire buttons in the #nav to create New Matches
+    $("#nav #new-match-pvp-button").click(function() { rps.main.MGame.createNewMatch("pvp"); });
+    $("#nav #new-match-pvc-button").click(function() { rps.main.MGame.createNewMatch("pvc"); });
+
     // Create/wire the Matches Menu view
     rps.main.VMatchesMenu = new rps.views.MatchesMenu({
         el : document.getElementById("matches-menu"),
@@ -27,7 +31,11 @@ $(document).ready(function() {
         rps.main.VMatchesList.setMatchesCollection(rps.main.Collections[selectedMatchesType]);
     });
 
-    // Wire buttons in the #nav to create New Matches
-    $("#nav #new-match-pvp-button").click(function() { rps.main.MGame.createNewMatch("pvp"); });
-    $("#nav #new-match-pvc-button").click(function() { rps.main.MGame.createNewMatch("pvc"); });
+    // Create the Current Match view
+    rps.main.VCurrentMatch = new rps.views.CurrentMatch({
+        el : document.getElementById("main")
+    });
+    rps.main.VMatchesList.on("selection:match", function(match) {
+        rps.main.VCurrentMatch.setModel(match);
+    });
 });
