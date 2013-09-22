@@ -49,6 +49,7 @@ rps.views.MatchesMenu = Backbone.View.extend({
 // View that renders the List of Matches currently highlighted
 // It's not bound to a specific Collection/Model: it can be switched to a specific Collection programmatically
 rps.views.MatchesList = Backbone.View.extend({
+    _matchItemTemplate : _.template($("#match-item-template").html()),
     _matchesCollection : null,
     initialize : function(options) {
         // Set Matches Collection, if provided
@@ -65,52 +66,28 @@ rps.views.MatchesList = Backbone.View.extend({
 
             // Render the List Match Items
             this._matchesCollection.each(function(match) {
-                var statusIcon,
-                    id;
+                var templateData = {};
 
                 // Prepare the "Status Icon"
                 switch(match.get("status")) {
-                    case 1:
-                        statusIcon = "<i class=\"icon-flag\"></i>";
-                        break;
-                    case 3:
-                        statusIcon = "<i class=\"icon-user\"></i>";
-                        break;
-                    case 4:
-                        statusIcon = "<i class=\"icon-cut\"></i>";
-                        break;
+                    case 1: templateData.statusIcon = "<i class=\"icon-flag\"></i>"; break;
+                    case 3: templateData.statusIcon = "<i class=\"icon-user\"></i>"; break;
+                    case 4: templateData.statusIcon = "<i class=\"icon-cut\"></i>"; break;
                     case 8:
                         switch(match.get("result")) {
-                            case "won":
-                                statusIcon = "<i class=\"icon-smile\"></i>";
-                                break;
-                            case "lost":
-                                statusIcon = "<i class=\"icon-frown\"></i>";
-                                break;
-                            case "draw":
-                                statusIcon = "<i class=\"icon-meh\"></i>";
-                                break;
+                            case "won": templateData.statusIcon = "<i class=\"icon-smile\"></i>"; break;
+                            case "lost": templateData.statusIcon = "<i class=\"icon-frown\"></i>"; break;
+                            case "draw": templateData.statusIcon = "<i class=\"icon-meh\"></i>"; break;
                         }
                         break;
                 }
 
-                // Prepare ID
-                if (match.get("id")) {
-                    id = match.get("id").substr(0, 20) + "...";
-                }
+                // Prepare "id" and "players"
+                templateData.id = typeof(match.get("id")) === "string" ? match.get("id").substr(0, 20) + "..." : "UNDEF";
+                templateData.players = typeof(match.get("players")) === "number" ? match.get("players") : -1;
 
                 // Render Match Item
-                thisView.$el.append("<div class=\"match-item pure-g\">"
-                    + "<div class=\"match-status pure-u-1-6\">"
-                    + statusIcon
-                    + "</div>"
-                    + "<div class=\"match-info pure-u-5-6\">"
-                    + "<ul>"
-                    + "<li><strong>Match ID:</strong> <span class=\"match-id\">"+ id +"</span></li>"
-                    + "<li><strong>Players:</strong> <span class=\"match-players\">"+ match.get("players")  +"</span></li>"
-                    + "</ul>"
-                    + "</div>"
-                    + "</div>");
+                thisView.$el.append(thisView._matchItemTemplate(templateData));
             });
         }
     },

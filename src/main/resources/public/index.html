@@ -16,6 +16,21 @@
         <![endif]-->
         <link href="/css/index.css" rel="stylesheet">
 
+        <!-- Underscore Templates -->
+        <script type="text/template" id="match-item-template">
+            <div class="match-item pure-g">
+                <div class="match-status pure-u-1-6">
+                    <%= statusIcon %>
+                </div>
+                <div class="match-info pure-u-5-6">
+                    <ul>
+                        <li><strong>Match ID:</strong> <span class="match-id"><%= id %></span></li>
+                        <li><strong>Players:</strong> <span class="match-players"><%= players %></span></li>
+                    </ul>
+                </div>
+            </div>
+        </script>
+
         <!-- Core JS -->
         <script src="/js/models.js"></script>
         <script src="/js/views.js"></script>
