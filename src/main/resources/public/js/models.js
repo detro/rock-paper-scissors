@@ -74,12 +74,12 @@ rps.collections.Matches = Backbone.Collection.extend({
     url     : "/api/matches",
     _autoUpdateEnabled  : true,
     _autoUpdateInterval : 1000,
-    initialize : function(type) {
+    initialize : function(models, options) {
         var autoUpdate,
             thisCollection = this;
 
         // Initialize READ URL
-        this.type = type || "all";
+        this.type = options.type || "all";
         this.url += "?type=" + this.type;
 
         // Begin Auto Update

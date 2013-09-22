@@ -22,6 +22,9 @@ rps.views.MatchesMenu = Backbone.View.extend({
 
             e.preventDefault();
         });
+
+        // First rendering
+        this.render();
     },
     render : function() {
         var collections = this.options.collections,

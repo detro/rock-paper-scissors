@@ -2,9 +2,9 @@ var rps = rps || {};
 rps.main = rps.main || {};
 
 rps.main.Collections = {
-    "available" : new rps.collections.Matches("available"),
-    "mine"      : new rps.collections.Matches("mine"),
-    "all"       : new rps.collections.Matches("all")
+    "available" : new rps.collections.Matches([], { type : "available" }),
+    "mine"      : new rps.collections.Matches([], { type : "mine" }),
+    "all"       : new rps.collections.Matches([], { type : "all" })
 };
 
 rps.main.MGame = new rps.models.Game();
