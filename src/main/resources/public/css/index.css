@@ -104,6 +104,17 @@ a {
 }
 
 /* Matches List Styles */
+#list .heading {
+    background: #07e;
+    padding: 0.4em 0.1em;
+    color: white;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+#list .heading h2 {
+    padding: 0;
+    margin: 0;
+}
 #list .match-item {
     -webkit-transition: border-width .50s ease-out, background-color .50s ease-out;
     -moz-transition: border-width .50s ease-out, background-color .50s ease-out;
@@ -120,6 +131,7 @@ a {
 }
 #list .match-item .match-info ul {
     list-style: none;
+    padding: 0;
 }
 #list .match-item .match-status {
     font-size: 2.5em;

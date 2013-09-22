@@ -79,8 +79,8 @@ rps.collections.Matches = Backbone.Collection.extend({
             thisCollection = this;
 
         // Initialize READ URL
-        type = type || "all";
-        this.url += "?type=" + type;
+        this.type = type || "all";
+        this.url += "?type=" + this.type;
 
         // Begin Auto Update
         autoUpdate = function() {
