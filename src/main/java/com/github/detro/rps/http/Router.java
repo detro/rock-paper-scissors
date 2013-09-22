@@ -219,15 +219,31 @@ public class Router {
                 match.getId(),
                 match.getStatus(),
                 match.playersAmount()));
-        if (match.getStatus() == Match.PLAYED && match.containsPlayer(currentPlayerId)) {
-            String winner = match.getWinner();
-            if (winner == currentPlayerId) {
-                builder.append(" , \"result\" : \"won\"");
-            } else if (winner == "draw") {
-                builder.append(" , \"result\" : \"draw\"");
-            } else {
-                builder.append(" , \"result\" : \"lost\"");
+        if (match.containsPlayer(currentPlayerId)) {
+
+            builder.append(" , \"canJoin\" : false");
+            builder.append(" , \"canReset\" : true");
+            builder.append(" , \"canLeave\" : true");
+
+            if (match.getStatus() == Match.PLAYED) {
+                String winner = match.getWinner();
+                if (winner == currentPlayerId) {
+                    builder.append(" , \"result\" : \"won\"");
+                } else if (winner == "draw") {
+                    builder.append(" , \"result\" : \"draw\"");
+                } else {
+                    builder.append(" , \"result\" : \"lost\"");
+                }
+//                builder.append(String.format(" , \"weapons\" : { \"you\" : %d , \"opponent\" : %d }", match.we ));
             }
+        } else if (match.playersAmount() < 2) {
+            builder.append(" , \"canJoin\" : true");
+            builder.append(" , \"canReset\" : false");
+            builder.append(" , \"canLeave\" : false");
+        } else {
+            builder.append(" , \"canJoin\" : false");
+            builder.append(" , \"canReset\" : false");
+            builder.append(" , \"canLeave\" : false");
         }
         builder.append(" }");
 
