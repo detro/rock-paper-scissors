@@ -134,6 +134,9 @@ rps.models.Game = function() {
     this.getWeaponsAmount = function() {
         return weapons.length;
     };
+    this.getWeapons = function() {
+        return weapons;
+    };
 
     // Create new match
     this.createNewMatch = function(matchKind) {
