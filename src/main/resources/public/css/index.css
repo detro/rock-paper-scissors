@@ -88,6 +88,13 @@ a {
 #nav .pure-menu ul {
     text-align: right;
 }
+#nav .pure-menu li,
+#nav .pure-menu li a {
+    -webkit-transition: background-color .20s ease-out;
+    -moz-transition: background-color .20s ease-out;
+    -o-transition: background-color .20s ease-out;
+    transition: background-color .20s ease-out;
+}
 #nav .pure-menu li a .matches-num {
     font-weight: bold;
     font-size: 110%;
@@ -116,15 +123,19 @@ a {
     margin: 0;
 }
 #list .match-item {
-    -webkit-transition: border-width .50s ease-out, background-color .50s ease-out;
-    -moz-transition: border-width .50s ease-out, background-color .50s ease-out;
-    -o-transition: border-width .50s ease-out, background-color .50s ease-out;
-    transition: border-width .50s ease-out, background-color .50s ease-out;
+    -webkit-transition: border-width .20s ease-out, background-color .20s ease-out;
+    -moz-transition: border-width .20s ease-out, background-color .20s ease-out;
+    -o-transition: border-width .20s ease-out, background-color .20s ease-out;
+    transition: border-width .20s ease-out, background-color .20s ease-out;
+    cursor: pointer;
+}
+#list .match-item-hover {
+    background: #dbedff;
 }
 #list .match-item-selected {
     background: #dbedff;
-    border-left: 4px solid #07e;
-    padding-left: -4px;
+    border-left: 6px solid #07e;
+    padding-left: -6px;
 }
 #list .match-item .match-info {
     font-size: 0.7em;
