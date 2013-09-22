@@ -30,6 +30,46 @@
                 </div>
             </div>
         </script>
+        <script type="text/template" id="match-content-template">
+            <div class="match-content">
+                <div class="match-header pure-g">
+                    <div class="match-status pure-u-1-5">
+                        <%= statusIcon %>
+                    </div>
+
+                    <div class="match-info pure-u-4-5">
+                        <ul>
+                            <li><strong>Match ID:</strong> <span class="match-id"><%= id %></span></li>
+                            <li><strong>Players:</strong> <span class="match-players"><%= players %></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="match-body">
+                    <div class="match-status">
+                        <h2><%= statusMessage %></h2>
+                    </div>
+
+                    <div class="match-weapons">
+                        <% for (var i = 0; i < weapons.length; ++i) { %>
+                        <button class="pure-button"><%= weapons[i] %></button>
+                        <% } %>
+                    </div>
+
+                    <div class="match-actions">
+                        <% if (canJoin) { %>
+                        <button id="join-button" class="pure-button pure-button-positive"><i class="icon-signin"></i> Join</button>
+                        <% } %>
+                        <% if (canReset) { %>
+                        <button id="leave-button" class="pure-button pure-button-negative"><i class="icon-signout"></i> Leave</button>
+                        <% } %>
+                        <% if (canLeave) { %>
+                        <button id="reset-button" class="pure-button pure-button-warning"><i class="icon-refresh"></i> Reset</button>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </script>
 
         <!-- Core JS -->
         <script src="/js/models.js"></script>

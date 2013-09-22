@@ -98,18 +98,7 @@ rps.views.MatchesList = Backbone.View.extend({
                 templateData = {};
 
                 // Prepare the "Status Icon"
-                switch(match.get("status")) {
-                    case 1: templateData.statusIcon = "<i class=\"icon-flag\"></i>"; break;
-                    case 3: templateData.statusIcon = "<i class=\"icon-user\"></i>"; break;
-                    case 4: templateData.statusIcon = "<i class=\"icon-cut\"></i>"; break;
-                    case 8:
-                        switch(match.get("result")) {
-                            case "won": templateData.statusIcon = "<i class=\"icon-smile\"></i>"; break;
-                            case "lost": templateData.statusIcon = "<i class=\"icon-frown\"></i>"; break;
-                            case "draw": templateData.statusIcon = "<i class=\"icon-meh\"></i>"; break;
-                        }
-                        break;
-                }
+                templateData.statusIcon = rps.views.utils.matchToStatusIcon(match);
 
                 // Prepare "id" and "players"
                 templateData.id = typeof(match.get("id")) === "string" ? match.get("id").substr(0, 20) + "..." : "UNDEF";
@@ -134,3 +123,62 @@ rps.views.MatchesList = Backbone.View.extend({
         }
     }
 });
+
+// View representing the Current Match
+rps.views.CurrentMatch = Backbone.View.extend({
+    _matchContentTemplate : _.template($("#match-content-template").html()),
+    events : {
+        // TODO
+    },
+    render : function() {
+        var templateData;
+
+        if (this.model) {
+            templateData = {
+                statusIcon      : rps.views.utils.matchToStatusIcon(this.model),
+                id              : this.model.get("id"),
+                players         : this.model.get("players"),
+                statusMessage   : this.model.get("status"), //< TODO
+                weapons         : rps.main.MGame.getWeapons(),
+                canJoin         : this.model.get("canJoin"),
+                canReset        : this.model.get("canReset"),
+                canLeave        : this.model.get("canLeave")
+            }
+
+            this.$el.html(this._matchContentTemplate(templateData));
+        }
+    },
+    setModel : function(model) {
+        // If no model was available before
+        if (!this.model) {
+            // Store model
+            this.model = model;
+
+            // Listen to model changes from now on
+            this.listenTo(this.model, "change", this.render);
+            this.model.trigger("change", this.model);
+        } else {
+            // Change the model's data (not the model itself - we don't need to)
+            this.model.set(model.toJSON());
+        }
+    }
+});
+
+// View Utilities
+rps.views.utils = {};
+
+// Generates a "status icon" out of the Match data
+rps.views.utils.matchToStatusIcon = function(match) {
+    // Prepare the "Status Icon"
+    switch(match.get("status")) {
+        case 1: return "<i class=\"icon-flag\"></i>";
+        case 3: return "<i class=\"icon-user\"></i>";
+        case 4: return "<i class=\"icon-cut\"></i>";
+        case 8:
+            switch(match.get("result")) {
+                case "won": return "<i class=\"icon-smile\"></i>";
+                case "lost": return "<i class=\"icon-frown\"></i>";
+                case "draw": return "<i class=\"icon-meh\"></i>";
+            }
+    }
+};
