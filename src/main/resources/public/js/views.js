@@ -51,6 +51,7 @@ rps.views.MatchesMenu = Backbone.View.extend({
 rps.views.MatchesList = Backbone.View.extend({
     _matchItemTemplate : _.template($("#match-item-template").html()),
     _matchesCollection : null,
+    _selectedMatch : null,
     initialize : function(options) {
         var thisView = this;
 
@@ -74,6 +75,13 @@ rps.views.MatchesList = Backbone.View.extend({
 
             // Emit event to inform listeners of which Match has been selected
             thisView.trigger("selection:match", thisView._matchesCollection.at($(this).index() -1));
+        });
+
+        // Change Selected Match
+        this.on("selection:match", function(selectedMatch) {
+            if (thisView._selectedMatch !== selectedMatch) {
+                thisView._selectedMatch = selectedMatch;
+            }
         });
     },
     render : function() {
@@ -106,6 +114,7 @@ rps.views.MatchesList = Backbone.View.extend({
                 // Prepare "id" and "players"
                 templateData.id = typeof(match.get("id")) === "string" ? match.get("id").substr(0, 20) + "..." : "UNDEF";
                 templateData.players = typeof(match.get("players")) === "number" ? match.get("players") : -1;
+                templateData.selected = this._selectedMatch === match;
 
                 // Render Match Item
                 this.$el.append(this._matchItemTemplate(templateData));

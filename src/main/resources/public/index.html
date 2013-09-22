@@ -18,7 +18,7 @@
 
         <!-- Underscore Templates -->
         <script type="text/template" id="match-item-template">
-            <div class="match-item pure-g">
+            <div class="match-item <% if (selected) { %>match-item-selected<% } %> pure-g">
                 <div class="match-status pure-u-1-6">
                     <%= statusIcon %>
                 </div>
