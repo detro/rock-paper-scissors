@@ -10,6 +10,30 @@ body {
 a {
     text-decoration: none;
 }
+.pure-button-primary,
+.pure-button-positive,
+.pure-button-negative,
+.pure-button-alert,
+.pure-button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+.pure-button-primary {
+    background: #07e;
+}
+.pure-button-positive {
+    background: rgb(28, 184, 65); /* this is a green */
+}
+.pure-button-negative {
+    background: rgb(202, 60, 60); /* this is a maroon */
+}
+.pure-button-alert {
+    background: rgb(223, 117, 20); /* this is an orange */
+}
+.pure-button-secondary {
+    background: rgb(66, 184, 221); /* this is a light blue */
+}
 
 /* LAYOUT CSS */
 #layout {
@@ -25,10 +49,11 @@ a {
 #nav {
     margin-left: -500px; /* "left col (nav + list)" width */
     width: 200px;
-    background: #222;
+    background: #111;
     text-align: center;
     padding: 2em 0;
     color: #ddd;
+    border-right: 4px solid #07e;
 }
 #list {
     margin-left: -300px;
@@ -40,19 +65,22 @@ a {
 /* Vertical Navigation Styles */
 #nav #title {
     font-size: 1.5em;
-    margin: 0.2em 1em;
+    margin: 1em 0;
     text-align: center;
 }
 #nav .pure-menu {
     background: transparent;
     border: none;
     text-align: left;
+    margin: 1em 0;
 }
 #nav .pure-menu-heading {
     border-bottom: none;
-    font-size: 1.2em;
-    color: #0078e7;
-    text-align: right;
+    font-size: 1.4em;
+    color: #444;
+    font-weight: bold;
+    text-align: center;
+    margin: 1em 0 0;
 }
 #nav .nav-menu-button {
     display: none;
@@ -60,26 +88,32 @@ a {
 #nav .pure-menu ul {
     text-align: right;
 }
-#nav .pure-menu li a matches-num {
+#nav .pure-menu li a .matches-num {
     font-weight: bold;
-    color: white;
     font-size: 110%;
 }
 #nav .pure-menu .pure-menu-selected {
-    background: #888;
+    background: #07e;
+    color: white;
+}
+#nav .pure-menu .pure-menu-selected a {
+    color: white;
+}
+#nav .pure-menu .pure-menu-selected a:hover {
+    color: #07e;
 }
 
 /* Matches List Styles */
 #list .match-item {
-    -webkit-transition: border-width .20s ease-out, background-color .20s ease-out;
-    -moz-transition: border-width .20s ease-out, background-color .20s ease-out;
-    -o-transition: border-width .20s ease-out, background-color .20s ease-out;
-    transition: border-width .20s ease-out, background-color .20s ease-out;
+    -webkit-transition: border-width .50s ease-out, background-color .50s ease-out;
+    -moz-transition: border-width .50s ease-out, background-color .50s ease-out;
+    -o-transition: border-width .50s ease-out, background-color .50s ease-out;
+    transition: border-width .50s ease-out, background-color .50s ease-out;
 }
 #list .match-item-selected {
     background: #dbedff;
-    border-left: 3px solid #0078e7;
-    padding-left: -3px;
+    border-left: 4px solid #07e;
+    padding-left: -4px;
 }
 #list .match-item .match-info {
     font-size: 0.7em;
@@ -88,13 +122,13 @@ a {
     list-style: none;
 }
 #list .match-item .match-status {
-    font-size: 2em;
+    font-size: 2.5em;
     text-align: center;
 }
 
 /* Current Match Styles */
 #main .match-content .match-header {
-    background: #222;
+    background: #111;
     color: #ddd;
 }
 #main .match-content .match-status {
@@ -145,6 +179,7 @@ a {
         height: 60px;
         position: relative;
         overflow: hidden;
+        border: 0;
     }
     #nav #title {
         font-size: 14px;
