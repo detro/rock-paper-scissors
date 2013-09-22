@@ -16,7 +16,7 @@ rps.views.MatchesMenu = Backbone.View.extend({
         this.listenTo(this, "change:selectedMatchesType", this.render);
 
         // Bind clicks on menu entries
-        this.$el.delegate("a", "click", function(e) {
+        this.$el.on("click", "a", function(e) {
             thisView.selectedMatchesType = e.currentTarget.className;
             thisView.trigger("change:selectedMatchesType", thisView.selectedMatchesType);
 
@@ -52,21 +52,42 @@ rps.views.MatchesList = Backbone.View.extend({
     _matchItemTemplate : _.template($("#match-item-template").html()),
     _matchesCollection : null,
     initialize : function(options) {
+        var thisView = this;
+
         // Set Matches Collection, if provided
         if (options.matchesCollection) {
             this.setMatchesCollection(options.matchesCollection);
         }
+
+        // Hover events delegate
+        this.$el.on("mouseenter", ".match-item", function(e) {
+            $(this).addClass("match-item-hover");
+        });
+        this.$el.on("mouseleave", ".match-item", function(e) {
+            $(this).removeClass("match-item-hover");
+        });
+        // Click event delegate
+        this.$el.on("click", ".match-item", function(e) {
+            // Select Match Item (css)
+            $(this).siblings().removeClass("match-item-selected");
+            $(this).addClass("match-item-selected");
+
+            // Emit event to inform listeners of which Match has been selected
+            thisView.trigger("selection:match", thisView._matchesCollection.at($(this).index() -1));
+        });
     },
     render : function() {
-        var thisView = this;
+        var i, ilen,
+            match, templateData;
 
         if (this._matchesCollection !== null) {
             // Render the List Heading
             this.$el.html("<div class=\"heading\"><h2>"+ this._matchesCollection.type  +" matches</h2></div>");
 
             // Render the List Match Items
-            this._matchesCollection.each(function(match) {
-                var templateData = {};
+            for (i = 0, ilen = this._matchesCollection.size(); i < ilen; ++i) {
+                match = this._matchesCollection.at(i);
+                templateData = {};
 
                 // Prepare the "Status Icon"
                 switch(match.get("status")) {
@@ -87,8 +108,8 @@ rps.views.MatchesList = Backbone.View.extend({
                 templateData.players = typeof(match.get("players")) === "number" ? match.get("players") : -1;
 
                 // Render Match Item
-                thisView.$el.append(thisView._matchItemTemplate(templateData));
-            });
+                this.$el.append(this._matchItemTemplate(templateData));
+            }
         }
     },
     setMatchesCollection : function(matchesCollection) {
