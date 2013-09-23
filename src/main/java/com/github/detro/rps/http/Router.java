@@ -157,9 +157,9 @@ public class Router {
                     // Parse the Weapon ID
                     int weaponId;
                     try {
-                        weaponId = Integer.parseInt(req.queryParams("weaponid"));
+                        weaponId = Integer.parseInt(req.queryParams("weaponId"));
                     } catch(NumberFormatException nfe) {
-                        LOG.error(String.format("Weapon '%s' is invalid", req.queryParams("weaponid")));
+                        LOG.error(String.format("Weapon '%s' is invalid", req.queryParams("weaponId")));
                         res.status(400);
                         return;
                     }

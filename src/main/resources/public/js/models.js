@@ -53,8 +53,8 @@ rps.models.Match = Backbone.Model.extend({
             url     : this.url(),
             type    : "PUT",
             data    : {
-                action  : "weapon",
-                weapon  : weaponId
+                action      : "weapon",
+                weaponId    : weaponId
             },
             success : function(data) {
                 thisMatch.set(data);
