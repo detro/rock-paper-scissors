@@ -152,7 +152,7 @@ a {
     list-style: none;
     padding: 0;
 }
-#list .match-item .match-status {
+#list .match-item .match-kind {
     font-size: 2.5em;
     text-align: center;
 }
@@ -162,7 +162,7 @@ a {
     background: #111;
     color: #ddd;
 }
-#main .match-content .match-status {
+#main .match-content .match-kind {
     font-size: 4em;
     text-align: center;
 }

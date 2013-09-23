@@ -19,8 +19,12 @@
         <!-- Underscore Templates -->
         <script type="text/template" id="match-item-template">
             <div class="match-item <% if (selected) { %>match-item-selected<% } %> pure-g">
-                <div class="match-status pure-u-1-6">
-                    <%= statusIcon %>
+                <div class="match-kind pure-u-1-6">
+                    <% if (kind && kind === "pvc") { %>
+                        <i class="icon-desktop"></i>
+                    <% } else { %>
+                        <i class="icon-user"></i>
+                    <% } %>
                 </div>
                 <div class="match-info pure-u-5-6">
                     <ul>
@@ -33,8 +37,12 @@
         <script type="text/template" id="match-content-template">
             <div class="match-content">
                 <div class="match-header pure-g">
-                    <div class="match-status pure-u-1-5">
-                        <%= statusIcon %>
+                    <div class="match-kind pure-u-1-5">
+                        <% if (kind && kind === "pvc") { %>
+                            <i class="icon-desktop"></i>
+                        <% } else { %>
+                            <i class="icon-user"></i>
+                        <% } %>
                     </div>
 
                     <div class="match-info pure-u-4-5">

@@ -93,12 +93,10 @@ rps.views.MatchesList = Backbone.View.extend({
                 match = this._matchesCollection.at(i);
                 templateData = {};
 
-                // Prepare the "Status Icon"
-                templateData.statusIcon = rps.views.utils.statusIconFromMatch(match);
-
                 // Prepare "id" and "players"
-                templateData.id = typeof(match.get("id")) === "string" ? match.get("id").substr(0, 20) + "..." : "UNDEF";
-                templateData.players = typeof(match.get("players")) === "number" ? match.get("players") : -1;
+                templateData.kind = match.get("kind");
+                templateData.id = match.get("id").substr(0, 20) + "...";
+                templateData.players = match.get("players");
                 templateData.selected = this._selectedMatchId === match.get("id");
 
                 // Render Match Item
@@ -144,11 +142,13 @@ rps.views.CurrentMatch = Backbone.View.extend({
 
         if (this.model) {
             templateData = {
-                statusIcon      : rps.views.utils.statusIconFromMatch(this.model),
+                kind            : this.model.get("kind"),
                 id              : this.model.get("id"),
                 players         : this.model.get("players"),
-                statusMessage   : this.model.get("status"), //< TODO
-                weapons         : rps.main.MGame.getWeapons(),
+                statusMessage   : rps.views.utils.statusMessageFromMatch(this.model),
+                canChooseWeapon : this.model.get("canChooseWeapon"),
+                availableWeapons: rps.main.MGame.getWeapons(),
+                chosenWeapons   : this.model.get("weapons") || {},
                 canJoin         : this.model.get("canJoin"),
                 canReset        : this.model.get("canReset"),
                 canLeave        : this.model.get("canLeave")
@@ -176,18 +176,22 @@ rps.views.CurrentMatch = Backbone.View.extend({
 // View Utilities
 rps.views.utils = {};
 
-// Generates a "status icon" out of the Match data
-rps.views.utils.statusIconFromMatch = function(match) {
-    // Prepare the "Status Icon"
+// Generates a "status message" from the Match status
+// TODO Localization?
+rps.views.utils.statusMessageFromMatch = function(match) {
     switch(match.get("status")) {
-        case 1: return "<i class=\"icon-flag\"></i>";
-        case 3: return "<i class=\"icon-user\"></i>";
-        case 4: return "<i class=\"icon-cut\"></i>";
+        case 1: return "Ready for Players";
+        case 3: return "Waiting for another Player";
+        case 4: return "Choosing Weapons";
         case 8:
-            switch(match.get("result")) {
-                case "won": return "<i class=\"icon-smile\"></i>";
-                case "lost": return "<i class=\"icon-frown\"></i>";
-                case "draw": return "<i class=\"icon-meh\"></i>";
+            if (match.get("result")) {
+                switch(match.get("result")) {
+                    case "won": return "You WON!";
+                    case "lost": return "You LOST!";
+                    case "draw": return "Draw - try again";
+                }
+            } else {
+                return "Finished";
             }
     }
 };
