@@ -92,7 +92,7 @@ public class Router {
                 Match newMatch = null;
 
                 if (kind == null || kind.equals("pvp")) {
-                    newMatch = new Match(playerId);
+                    newMatch = new PvPMatch(playerId);
                 } else if (kind.equals("pvc")) {
                     // TODO Create a new Match type for PvC (Player vs Computer)
                 } else {
