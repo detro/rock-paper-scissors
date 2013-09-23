@@ -169,15 +169,14 @@ a {
 #main .match-content .match-info ul {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0.2em 0;
     font-size: 0.9em;
 }
 #main .match-content .match-body {
     text-align: center;
 }
 #main .match-content .match-body .match-status-message {
-    font-size: 3em;
-    font-weight: bold;
+    font-size: 2em;
     text-align: center;
     padding: 0.5em 0;
     margin: 0.5em 0.1em;

@@ -56,13 +56,22 @@
                 <div class="match-body">
                     <div class="match-status-message">
                         <%= statusMessage %>
+                        <% if (status == 8) { %>
+                            <br>
+                            you: <strong><%= availableWeapons[chosenWeapons.you] %></strong>
+                            -
+                            opponent: <strong><%= availableWeapons[chosenWeapons.opponent] %></strong>
+                        <% } %>
                     </div>
 
                     <div class="match-weapons">
                         <% for (var i = 0; i < availableWeapons.length; ++i) { %>
                             <button class="pure-button
-                                pure-button-secondary
-                                <% if (i === chosenWeapons.you) { %>pure-button-active<% } %>
+                                <% if (i === chosenWeapons.you) { %>
+                                    pure-button-primary pure-button-active
+                                <% } else { %>
+                                    pure-button-secondary
+                                <% } %>
                                 <% if (!canChooseWeapon) { %>pure-button-disabled<% } %>"><%= availableWeapons[i] %></button>
                         <% } %>
                     </div>
