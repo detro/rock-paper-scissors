@@ -124,7 +124,7 @@ rps.views.CurrentMatch = Backbone.View.extend({
     events : {
         "click #join-button"    : "joinMatch",
         "click #leave-button"   : "leaveMatch",
-        "click #reset-button"   : "resetMatch"
+        "click #restart-button" : "restartMatch"
     },
     initialize : function(options) {
         var thisView = this;
@@ -146,12 +146,13 @@ rps.views.CurrentMatch = Backbone.View.extend({
     },
     joinMatch : function() { this.model.join(); },
     leaveMatch : function() { this.model.leave(); },
-    resetMatch : function() { this.model.reset(); },
+    restartMatch : function() { this.model.restart(); },
     render : function() {
         var templateData;
 
         if (this.model) {
             templateData = {
+                status          : this.model.get("status"),
                 kind            : this.model.get("kind"),
                 id              : this.model.get("id"),
                 players         : this.model.get("players"),

@@ -183,7 +183,7 @@ public class Router {
                         res.status(403);
                         return;
                     }
-                } else if (action.equals("reset")) {
+                } else if (action.equals("restart")) {
                     // Check if Player is part of the Match first
                     if (!match.containsPlayer(playerId)) {
                         LOG.error(String.format("Player '%s' is not part of Match '%s'", playerId, matchId));

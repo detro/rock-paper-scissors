@@ -67,7 +67,7 @@ public class RouterTest {
         PostMethod createMatch = null;
         PutMethod joinMatch = null;
         PutMethod setWeapon = null;
-        PutMethod resetMatch = null;
+        PutMethod restartMatch = null;
         GetMethod getMatchInfo = null;
         String body;
         JsonObject jsonBody;
@@ -123,9 +123,9 @@ public class RouterTest {
             assertEquals(jsonBody.get("result").getAsString(), "draw");
 
             // Reset the Match
-            resetMatch = new PutMethod(BASEURL + "/match/" + matchId);
-            resetMatch.setQueryString(new NameValuePair[] { new NameValuePair("action", "reset")});
-            assertEquals(client2.executeMethod(resetMatch), 200);
+            restartMatch = new PutMethod(BASEURL + "/match/" + matchId);
+            restartMatch.setQueryString(new NameValuePair[]{new NameValuePair("action", "restart")});
+            assertEquals(client2.executeMethod(restartMatch), 200);
 
             // Check Match is has now been reset
             getMatchInfo = new GetMethod(BASEURL + "/match/" + matchId);
@@ -143,7 +143,7 @@ public class RouterTest {
             if (createMatch != null) createMatch.releaseConnection();
             if (joinMatch != null) joinMatch.releaseConnection();
             if (setWeapon != null) setWeapon.releaseConnection();
-            if (resetMatch != null) resetMatch.releaseConnection();
+            if (restartMatch != null) restartMatch.releaseConnection();
             if (getMatchInfo != null) getMatchInfo.releaseConnection();
         }
     }

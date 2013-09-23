@@ -14,47 +14,31 @@ rps.models.Match = Backbone.Model.extend({
     isWaitingPlayer     : function() { return this.get("status") === 3; },
     isWaitingWeapons    : function() { return this.get("status") === 4; },
     isFinished          : function() { return this.get("status") === 8; },
-    action              : function(actionName) {
+    action              : function(actionData) {
         var thisMatch = this;
 
         Backbone.ajax({
             url     : this.url(),
             type    : "PUT",
-            data    : {
-                action  : actionName
-            },
+            data    : actionData,
             success : function(data) {
                 thisMatch.set(data);
-                thisMatch.trigger(actionName + ":success", thisMatch);
+                thisMatch.trigger(actionData.action + ":success", thisMatch);
             },
-            error   : function() { thisMatch.trigger(actionName + ":fail", thisMatch); }
+            error   : function() { thisMatch.trigger(actionData.action + ":fail", thisMatch); }
         });
     },
     join        : function() {
-        this.action("join");
+        this.action({ action : "join" });
     },
     leave       : function() {
-        this.action("leave");
+        this.action({ action : "leave" });
     },
-    reset       : function() {
-        this.action("reset");
+    restart       : function() {
+        this.action({ action : "restart" });
     },
     setWeapon   : function(weaponId) {
-        var thisMatch = this;
-
-        Backbone.ajax({
-            url     : this.url(),
-            type    : "PUT",
-            data    : {
-                action      : "weapon",
-                weaponId    : weaponId
-            },
-            success : function(data) {
-                thisMatch.set(data);
-                thisMatch.trigger("weapon:success", thisMatch);
-            },
-            error   : function() { thisMatch.trigger("weapon:fail", thisMatch); }
-        });
+        this.action({ action : "weapon", weaponId : weaponId });
     },
 });
 
