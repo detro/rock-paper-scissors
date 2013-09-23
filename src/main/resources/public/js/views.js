@@ -126,6 +126,19 @@ rps.views.CurrentMatch = Backbone.View.extend({
     events : {
         // TODO
     },
+    initialize : function(options) {
+        var thisView = this;
+
+        // Model in the view needs to be contantly refreshed to make
+        // we know about changes (ex. other player joins)
+        function refreshModel() {
+            if (thisView.model) {
+                thisView.model.fetch();
+            }
+            setTimeout(refreshModel, thisView.options.game.getRefreshInterval());
+        }
+        refreshModel();
+    },
     render : function() {
         var templateData;
 

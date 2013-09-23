@@ -73,7 +73,6 @@ rps.collections.Matches = Backbone.Collection.extend({
     model   : rps.models.Match,
     url     : "/api/matches",
     _autoUpdateEnabled  : true,
-    _autoUpdateInterval : 1000,
     initialize : function(models, options) {
         var autoUpdate,
             thisCollection = this;
@@ -82,12 +81,15 @@ rps.collections.Matches = Backbone.Collection.extend({
         this.type = options.type || "all";
         this.url += "?type=" + this.type;
 
+        // Store the Game option
+        this.game = options.game;
+
         // Begin Auto Update
         autoUpdate = function() {
             if (thisCollection._autoUpdateEnabled) {
                 thisCollection.fetch();
             }
-            setTimeout(autoUpdate, thisCollection._autoUpdateInterval);
+            setTimeout(autoUpdate, thisCollection.game.getRefreshInterval());
         };
         autoUpdate();
     },
@@ -101,7 +103,8 @@ rps.collections.Matches = Backbone.Collection.extend({
 
 // Game Model
 rps.models.Game = function() {
-    var weapons,
+    var refreshInterval = 3000,
+        weapons,
         thisGame = this;
 
     // Decorate Game Model with Backbone Events
@@ -157,6 +160,14 @@ rps.models.Game = function() {
             }
         });
     };
+
+    // Get/Set Refresh Interval
+    this.getRefreshInterval = function() { return refreshInterval; };
+    this.setRefreshInterval = function(interval) {
+        if (typeof(interval) === "number") {
+            refreshInterval = interval;
+        }
+    }
 
     return this;
 };

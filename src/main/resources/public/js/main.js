@@ -9,9 +9,9 @@ rps.main.MGame.on("ready", function() {
 
     // Create Collections
     rps.main.Collections = {
-        "available" : new rps.collections.Matches([], { type : "available" }),
-        "mine"      : new rps.collections.Matches([], { type : "mine" }),
-        "all"       : new rps.collections.Matches([], { type : "all" })
+        "available" : new rps.collections.Matches([], { type : "available", game : rps.main.MGame }),
+        "mine"      : new rps.collections.Matches([], { type : "mine", game : rps.main.MGame  }),
+        "all"       : new rps.collections.Matches([], { type : "all", game : rps.main.MGame })
     };
 
     // Create Views
@@ -39,7 +39,8 @@ rps.main.MGame.on("ready", function() {
 
         // Create the Current Match view
         rps.main.VCurrentMatch = new rps.views.CurrentMatch({
-            el : document.getElementById("main")
+            el      : document.getElementById("main"),
+            game    : rps.main.MGame
         });
         rps.main.VMatchesList.on("select:matchJSON", function(matchJSON) {
             rps.main.VCurrentMatch.setMatchJSON(matchJSON);
