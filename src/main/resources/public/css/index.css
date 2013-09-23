@@ -61,6 +61,14 @@ a {
     border-right: 1px solid #ccc;
     overflow: auto;
 }
+.empty-view-placeholder {
+    display: block;
+    text-align: center;
+    margin: 2em 0.1em;
+    color: #ccc;
+    font-weight: bold;
+    font-size: 3em;
+}
 
 /* Vertical Navigation Styles */
 #nav #title {
