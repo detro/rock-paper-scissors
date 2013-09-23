@@ -138,6 +138,11 @@ rps.views.CurrentMatch = Backbone.View.extend({
             setTimeout(refreshModel, thisView.options.game.getRefreshInterval());
         }
         refreshModel();
+
+        // Set weapon on Match when weapon button is clicked
+        this.$el.on("click", ".match-weapons button", function() {
+            thisView.model.setWeapon( $(this).index() );
+        });
     },
     joinMatch : function() { this.model.join(); },
     leaveMatch : function() { this.model.leave(); },

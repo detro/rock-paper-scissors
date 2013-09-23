@@ -168,14 +168,32 @@ a {
 }
 #main .match-content .match-info ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9em;
 }
 #main .match-content .match-body {
     text-align: center;
-    padding: 0.5em;
+}
+#main .match-content .match-body .match-status-message {
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+    padding: 0.5em 0;
+    margin: 0.5em 0.1em;
+}
+#main .match-content .match-body .match-weapons {
+    padding: 0.5em 0;
+    margin: 0.5em 0 5em;
+    font-size: 1.5em;
+    background: #dbedff;
+}
+#main .match-content .match-body .match-weapons button {
+    text-transform: capitalize;
 }
 
-@media (max-width: 867px) {
 
+@media (max-width: 867px) {
     #list,
     #main {
         width: 100%;
@@ -214,7 +232,8 @@ a {
     }
     #nav #title {
         font-size: 14px;
-        padding: 5px 0;
+        padding: 0;
+        margin: 0;
     }
     #nav .nav-menu-button {
         display: block;

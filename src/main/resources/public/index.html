@@ -54,13 +54,16 @@
                 </div>
 
                 <div class="match-body">
-                    <div class="match-status">
-                        <h2><%= statusMessage %></h2>
+                    <div class="match-status-message">
+                        <%= statusMessage %>
                     </div>
 
                     <div class="match-weapons">
-                        <% for (var i = 0; i < weapons.length; ++i) { %>
-                        <button class="pure-button"><%= weapons[i] %></button>
+                        <% for (var i = 0; i < availableWeapons.length; ++i) { %>
+                            <button class="pure-button
+                                pure-button-secondary
+                                <% if (i === chosenWeapons.you) { %>pure-button-active<% } %>
+                                <% if (!canChooseWeapon) { %>pure-button-disabled<% } %>"><%= availableWeapons[i] %></button>
                         <% } %>
                     </div>
 
