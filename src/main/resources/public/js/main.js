@@ -45,6 +45,15 @@ rps.main.MGame.on("ready", function() {
         rps.main.VMatchesList.on("select:matchJSON", function(matchJSON) {
             rps.main.VCurrentMatch.setMatchJSON(matchJSON);
         });
+
+        // Wire the "#nav-menu-button" that appears on narrow screens (i.e. smartphones)
+        $("#nav-menu-button").click(function() {
+            if ($("#nav-inner").hasClass("open")) {
+                $("#nav-inner").removeClass("open");
+            } else {
+                $("#nav-inner").addClass("open");
+            }
+        });
     });
 
 });

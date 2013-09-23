@@ -90,8 +90,11 @@ a {
     text-align: center;
     margin: 1em 0 0;
 }
-#nav .nav-menu-button {
+#nav #nav-menu-button {
     display: none;
+}
+#nav #nav-inner {
+    display: block;
 }
 #nav .pure-menu ul {
     text-align: right;
@@ -146,11 +149,9 @@ a {
     padding-left: -6px;
 }
 #list .match-item .match-info {
-    font-size: 0.7em;
-}
-#list .match-item .match-info ul {
-    list-style: none;
-    padding: 0;
+    font-size: 0.8em;
+    text-overflow: ellipsis;
+    padding: 0.2em 0.1em;
 }
 #list .match-item .match-kind {
     font-size: 2.5em;
@@ -166,11 +167,10 @@ a {
     font-size: 4em;
     text-align: center;
 }
-#main .match-content .match-info ul {
-    list-style: none;
-    padding: 0;
-    margin: 0.2em 0;
-    font-size: 0.9em;
+#main .match-content .match-info {
+    padding: 0.2em 0.1em;
+    font-size: 1.1em;
+    text-overflow: ellipsis;
 }
 #main .match-content .match-body {
     text-align: center;
@@ -189,8 +189,8 @@ a {
 }
 #main .match-content .match-body .match-weapons button {
     text-transform: capitalize;
+    margin: 0.1em 0;
 }
-
 
 @media (max-width: 867px) {
     #list,
@@ -224,7 +224,6 @@ a {
     }
     #nav {
         width: 100%;
-        height: 60px;
         position: relative;
         overflow: hidden;
         border: 0;
@@ -234,12 +233,18 @@ a {
         padding: 0;
         margin: 0;
     }
-    #nav .nav-menu-button {
+    #nav #nav-menu-button {
         display: block;
-        top: 10px;
-        right: 10px;
+        top: 3px;
+        right: 3px;
         position: absolute;
         height: 40px;
+    }
+    #nav #nav-inner {
+        display: none;
+    }
+    #nav #nav-inner.open {
+        display: block;
     }
     #main {
         width: 100%;
