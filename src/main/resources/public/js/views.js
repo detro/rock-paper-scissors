@@ -69,19 +69,15 @@ rps.views.MatchesList = Backbone.View.extend({
         });
         // Click event delegate
         this.$el.on("click", ".match-item", function(e) {
+            var selectedMatch = thisView._matchesCollection.at($(this).index() -1);
+
             // Select Match Item (css)
             $(this).siblings().removeClass("match-item-selected");
             $(this).addClass("match-item-selected");
 
             // Emit event to inform listeners of which Match has been selected
-            thisView.trigger("selection:match", thisView._matchesCollection.at($(this).index() -1));
-        });
-
-        // Change Selected Match
-        this.on("selection:match", function(selectedMatch) {
-            if (thisView._selectedMatchId !== selectedMatch.get("id")) {
-                thisView._selectedMatchId = selectedMatch.get("id");
-            }
+            thisView._selectedMatchId = selectedMatch.get("id");
+            thisView.trigger("select:matchJSON", selectedMatch.toJSON());
         });
     },
     render : function() {
@@ -148,18 +144,18 @@ rps.views.CurrentMatch = Backbone.View.extend({
             this.$el.html(this._matchContentTemplate(templateData));
         }
     },
-    setModel : function(model) {
+    setMatchJSON : function(matchJSON) {
         // If no model was available before
         if (!this.model) {
             // Store model
-            this.model = model;
+            this.model = new rps.models.Match(matchJSON);
 
             // Listen to model changes from now on
             this.listenTo(this.model, "change", this.render);
             this.model.trigger("change", this.model);
         } else {
             // Change the model's data (not the model itself - we don't need to)
-            this.model.set(model.toJSON());
+            this.model.set(matchJSON);
         }
     }
 });

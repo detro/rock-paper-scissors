@@ -41,8 +41,8 @@ rps.main.MGame.on("ready", function() {
         rps.main.VCurrentMatch = new rps.views.CurrentMatch({
             el : document.getElementById("main")
         });
-        rps.main.VMatchesList.on("selection:match", function(match) {
-            rps.main.VCurrentMatch.setModel(match);
+        rps.main.VMatchesList.on("select:matchJSON", function(matchJSON) {
+            rps.main.VCurrentMatch.setMatchJSON(matchJSON);
         });
     });
 
