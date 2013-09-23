@@ -98,7 +98,7 @@ rps.views.MatchesList = Backbone.View.extend({
                 templateData = {};
 
                 // Prepare the "Status Icon"
-                templateData.statusIcon = rps.views.utils.matchToStatusIcon(match);
+                templateData.statusIcon = rps.views.utils.statusIconFromMatch(match);
 
                 // Prepare "id" and "players"
                 templateData.id = typeof(match.get("id")) === "string" ? match.get("id").substr(0, 20) + "..." : "UNDEF";
@@ -135,7 +135,7 @@ rps.views.CurrentMatch = Backbone.View.extend({
 
         if (this.model) {
             templateData = {
-                statusIcon      : rps.views.utils.matchToStatusIcon(this.model),
+                statusIcon      : rps.views.utils.statusIconFromMatch(this.model),
                 id              : this.model.get("id"),
                 players         : this.model.get("players"),
                 statusMessage   : this.model.get("status"), //< TODO
@@ -168,7 +168,7 @@ rps.views.CurrentMatch = Backbone.View.extend({
 rps.views.utils = {};
 
 // Generates a "status icon" out of the Match data
-rps.views.utils.matchToStatusIcon = function(match) {
+rps.views.utils.statusIconFromMatch = function(match) {
     // Prepare the "Status Icon"
     switch(match.get("status")) {
         case 1: return "<i class=\"icon-flag\"></i>";
