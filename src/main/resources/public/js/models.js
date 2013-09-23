@@ -113,7 +113,7 @@ rps.models.Game = function() {
         type    : "GET",
         success : function(data) {
             weapons = data;
-            thisGame.trigger("ready:weapons", weapons);
+            thisGame.trigger("ready", weapons);
         }
     });
 
