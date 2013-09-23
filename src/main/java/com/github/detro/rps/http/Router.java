@@ -146,6 +146,16 @@ public class Router {
                         res.status(403);
                         return;
                     }
+                } else if (action.equals("leave")) {
+                    // Remove Player from Match
+                    try {
+                        match.removePlayer(playerId);
+                    } catch(RuntimeException re) {
+                        // Player couldn't be removed from Match
+                        LOG.error(re.getMessage());
+                        res.status(403);
+                        return;
+                    }
                 } else if (action.equals("weapon")) {
                     // Check if Player is part of the Match first
                     if (!match.containsPlayer(playerId)) {

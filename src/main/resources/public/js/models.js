@@ -14,37 +14,30 @@ rps.models.Match = Backbone.Model.extend({
     isWaitingPlayer     : function() { return this.get("status") === 3; },
     isWaitingWeapons    : function() { return this.get("status") === 4; },
     isFinished          : function() { return this.get("status") === 8; },
-    join        : function() {
+    action              : function(actionName) {
         var thisMatch = this;
 
         Backbone.ajax({
             url     : this.url(),
             type    : "PUT",
             data    : {
-                action  : "join"
+                action  : actionName
             },
             success : function(data) {
                 thisMatch.set(data);
-                thisMatch.trigger("join:success", thisMatch);
+                thisMatch.trigger(actionName + ":success", thisMatch);
             },
-            error   : function() { thisMatch.trigger("join:fail", thisMatch); }
+            error   : function() { thisMatch.trigger(actionName + ":fail", thisMatch); }
         });
     },
+    join        : function() {
+        this.action("join");
+    },
+    leave       : function() {
+        this.action("leave");
+    },
     reset       : function() {
-        var thisMatch = this;
-
-        Backbone.ajax({
-            url     : this.url(),
-            type    : "PUT",
-            data    : {
-                action  : "reset"
-            },
-            success : function(data) {
-                thisMatch.set(data);
-                thisMatch.trigger("reset:success", thisMatch);
-            },
-            error   : function() { thisMatch.trigger("reset:fail", thisMatch); }
-        });
+        this.action("reset");
     },
     setWeapon   : function(weaponId) {
         var thisMatch = this;

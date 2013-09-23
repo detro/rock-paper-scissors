@@ -122,13 +122,15 @@ rps.views.MatchesList = Backbone.View.extend({
 rps.views.CurrentMatch = Backbone.View.extend({
     _matchContentTemplate : _.template($("#match-content-template").html()),
     events : {
-        // TODO
+        "click #join-button"    : "joinMatch",
+        "click #leave-button"   : "leaveMatch",
+        "click #reset-button"   : "resetMatch"
     },
     initialize : function(options) {
         var thisView = this;
 
-        // Model in the view needs to be contantly refreshed to make
-        // we know about changes (ex. other player joins)
+        // Model in the view needs to be constantly refreshed to make
+        // sure we know about changes (ex. other player joins)
         function refreshModel() {
             if (thisView.model) {
                 thisView.model.fetch();
@@ -137,6 +139,9 @@ rps.views.CurrentMatch = Backbone.View.extend({
         }
         refreshModel();
     },
+    joinMatch : function() { this.model.join(); },
+    leaveMatch : function() { this.model.leave(); },
+    resetMatch : function() { this.model.reset(); },
     render : function() {
         var templateData;
 
