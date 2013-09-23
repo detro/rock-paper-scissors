@@ -20,8 +20,7 @@ project.ext {
     sparkCoreVersion    = "1.1"
     httpclientVersion   = "3.1"
 
-//    gsonVersion             = "2.2.4"
-//    guavaVersion            = "14.0.1"
+    gsonVersion             = "2.2.4"
 
     seleniumVersion         = "2.35.0"
 //    phantomjsdriverVersion  = "1.0.4"
@@ -30,8 +29,7 @@ project.ext {
 dependencies {
     compile "com.sparkjava:spark-core:$sparkCoreVersion"
     compile "org.slf4j:slf4j-log4j12:$slf4jlog4jVersion"
-//    compile "com.google.code.gson:gson:$gsonVersion"
-//    compile "com.google.guava:guava:$guavaVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
 
     testCompile "org.testng:testng:$testngVersion"
     testCompile "commons-httpclient:commons-httpclient:$httpclientVersion"

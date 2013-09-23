@@ -3,6 +3,9 @@ package com.github.detro.rps.http.test;
 import com.github.detro.rps.Match;
 import com.github.detro.rps.Weapons;
 import com.github.detro.rps.http.Router;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -18,7 +21,6 @@ import java.util.regex.Pattern;
 
 import static org.testng.Assert.*;
 
-// TODO Rewrite those tests once a proper JSON library is introduced
 // TODO Definitely needs more tests
 public class RouterTest {
     private static final int PORT = PortProber.findFreePort();
@@ -67,6 +69,9 @@ public class RouterTest {
         PutMethod setWeapon = null;
         PutMethod resetMatch = null;
         GetMethod getMatchInfo = null;
+        String body;
+        JsonObject jsonBody;
+        String matchId;
 
         // Create a Match
         try {
@@ -75,17 +80,14 @@ public class RouterTest {
             createMatch.setParameter("kind", "pvp");
             assertEquals(client1.executeMethod(createMatch), 200);
 
-            // check response body
-            String body = new String(createMatch.getResponseBody());
-            assertTrue(body.startsWith("{"));
-            assertTrue(body.endsWith("}"));
-            assertTrue(body.contains("\"id\""));
-
             // Extract Match ID from response body
-            Pattern pattern = Pattern.compile("\"id\" : \"(\\p{XDigit}+)\"");
-            Matcher matcher = pattern.matcher(body);
-            assertTrue(matcher.find());
-            String matchId = matcher.group(1);
+            body = new String(createMatch.getResponseBody());
+            jsonBody = new JsonParser().parse(body).getAsJsonObject();
+            assertTrue(jsonBody.isJsonObject());
+            assertTrue(jsonBody.has("id"));
+            assertTrue(jsonBody.get("id").isJsonPrimitive());
+            assertNotNull(jsonBody.get("id"));
+            matchId = jsonBody.get("id").getAsString();
 
             // First Player joins the match
             joinMatch = new PutMethod(BASEURL + "/match/" + matchId);
@@ -108,18 +110,17 @@ public class RouterTest {
             getMatchInfo = new GetMethod(BASEURL + "/match/" + matchId);
             assertEquals(client1.executeMethod(getMatchInfo), 200);
             body = new String(getMatchInfo.getResponseBody());
+            jsonBody = new JsonParser().parse(body).getAsJsonObject();
 
             // Extract the Match status
-            pattern = Pattern.compile("\"status\" : ([0-9])");
-            matcher = pattern.matcher(body);
-            assertTrue(matcher.find());
-            assertEquals(Integer.parseInt(matcher.group(1)), Match.PLAYED);
+            assertTrue(jsonBody.has("status"));
+            assertTrue(jsonBody.get("status").isJsonPrimitive());
+            assertEquals(jsonBody.get("status").getAsInt(), Match.PLAYED);
 
             // Extract the Match result
-            pattern = Pattern.compile("\"result\" : \"([a-z]+)\"");
-            matcher = pattern.matcher(body);
-            assertTrue(matcher.find());
-            assertEquals(matcher.group(1), "draw");
+            assertTrue(jsonBody.has("result"));
+            assertTrue(jsonBody.get("result").isJsonPrimitive());
+            assertEquals(jsonBody.get("result").getAsString(), "draw");
 
             // Reset the Match
             resetMatch = new PutMethod(BASEURL + "/match/" + matchId);
@@ -132,10 +133,10 @@ public class RouterTest {
             body = new String(getMatchInfo.getResponseBody());
 
             // Extract the Match status
-            pattern = Pattern.compile("\"status\" : ([0-9])");
-            matcher = pattern.matcher(body);
-            assertTrue(matcher.find());
-            assertEquals(Integer.parseInt(matcher.group(1)), Match.WAITING_PLAYERS_WEAPONS);
+            jsonBody = new JsonParser().parse(body).getAsJsonObject();
+            assertTrue(jsonBody.has("status"));
+            assertTrue(jsonBody.get("status").isJsonPrimitive());
+            assertEquals(jsonBody.get("status").getAsInt(), Match.WAITING_PLAYERS_WEAPONS);
         } catch (IOException ioe) {
             fail();
         } finally {

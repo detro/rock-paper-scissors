@@ -2,8 +2,9 @@ package com.github.detro.rps.http;
 
 import com.github.detro.rps.GameCenter;
 import com.github.detro.rps.Match;
-import com.github.detro.rps.Weapons;
+import com.github.detro.rps.PvPMatch;
 
+import com.github.detro.rps.json.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,15 +36,7 @@ public class Router {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 // List all the Weapons
-                resBody.append("[");
-                for (int i = 0, ilen = Weapons.weaponsAmount(); i < ilen; ++i) {
-                    resBody.append("\"" + Weapons.getName(i) + "\"");
-
-                    // Append "comma" if needed
-                    resBody.append(i + 1 != ilen ? " , " : "");
-                }
-                resBody.append("]");
-
+                resBody.append(JSONUtils.weaponsToJson().toString());
                 res.status(200);
             }
         });
@@ -69,16 +62,7 @@ public class Router {
                     return;
                 }
 
-                resBody.append("[");
-                for (int i = 0, ilen = matches.size(); i < ilen; ++i) {
-                    // Append Match->JSON to Response Body
-                    resBody.append(matchToJSON(matches.get(i), playerId));
-
-                    // Append "comma" if needed
-                    resBody.append(i + 1 != ilen ? " , " : "");
-                }
-                resBody.append("]");
-
+                resBody.append(JSONUtils.matchesToJson(matches, playerId).toString());
                 res.status(200);
             }
         });
@@ -103,8 +87,8 @@ public class Router {
 
                 // Register the new Match
                 gameCenter.addMatch(newMatch);
-                resBody.append(matchToJSON(newMatch, playerId));
 
+                resBody.append(JSONUtils.matchToJson(newMatch, playerId));
                 res.status(200);
             }
         });
@@ -124,7 +108,7 @@ public class Router {
                     return;
                 }
 
-                resBody.append(matchToJSON(match, req.session().id()));
+                resBody.append(JSONUtils.matchToJson(match, req.session().id()));
                 res.status(200);
             }
         });
@@ -205,48 +189,9 @@ public class Router {
                     return;
                 }
 
-                resBody.append(matchToJSON(match, playerId));
+                resBody.append(JSONUtils.matchToJson(match, playerId).toString());
                 res.status(200);
             }
         });
-    }
-
-    private String matchToJSON(Match match, String currentPlayerId) {
-        // TODO Introduce Gson (or something similar) to generate those JSONs: this is ugly!
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(String.format("{ \"id\" : \"%s\" , \"status\" : %d , \"players\" : %d ",
-                match.getId(),
-                match.getStatus(),
-                match.playersAmount()));
-        if (match.containsPlayer(currentPlayerId)) {
-
-            builder.append(" , \"canJoin\" : false");
-            builder.append(" , \"canReset\" : true");
-            builder.append(" , \"canLeave\" : true");
-
-            if (match.getStatus() == Match.PLAYED) {
-                String winner = match.getWinner();
-                if (winner == currentPlayerId) {
-                    builder.append(" , \"result\" : \"won\"");
-                } else if (winner == "draw") {
-                    builder.append(" , \"result\" : \"draw\"");
-                } else {
-                    builder.append(" , \"result\" : \"lost\"");
-                }
-//                builder.append(String.format(" , \"weapons\" : { \"you\" : %d , \"opponent\" : %d }", match.we ));
-            }
-        } else if (match.playersAmount() < 2) {
-            builder.append(" , \"canJoin\" : true");
-            builder.append(" , \"canReset\" : false");
-            builder.append(" , \"canLeave\" : false");
-        } else {
-            builder.append(" , \"canJoin\" : false");
-            builder.append(" , \"canReset\" : false");
-            builder.append(" , \"canLeave\" : false");
-        }
-        builder.append(" }");
-
-        return builder.toString();
     }
 }
