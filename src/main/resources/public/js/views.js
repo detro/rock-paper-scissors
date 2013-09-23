@@ -95,7 +95,7 @@ rps.views.MatchesList = Backbone.View.extend({
 
                 // Prepare "id" and "players"
                 templateData.kind = match.get("kind");
-                templateData.id = match.get("id").substr(0, 20) + "...";
+                templateData.id = match.get("id");
                 templateData.players = match.get("players");
                 templateData.selected = this._selectedMatchId === match.get("id");
 
