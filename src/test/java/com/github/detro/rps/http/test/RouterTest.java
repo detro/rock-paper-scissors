@@ -101,7 +101,7 @@ public class RouterTest {
             setWeapon = new PutMethod(BASEURL + "/match/" + matchId);
             setWeapon.setQueryString(new NameValuePair[] {
                     new NameValuePair("action", "weapon"),
-                    new NameValuePair("weaponid", "1")
+                    new NameValuePair("weaponId", "1")
             });
             assertEquals(client1.executeMethod(setWeapon), 200);
             assertEquals(client2.executeMethod(setWeapon), 200);
