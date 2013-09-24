@@ -2,6 +2,8 @@ package com.github.detro.rps;
 
 import java.util.Random;
 
+import static com.github.detro.rps.Weapons.NO_WEAPON;
+
 /**
  * Contains the list of weapons and the "A vs B" logic.
  *
@@ -11,6 +13,8 @@ import java.util.Random;
  * TODO Map error cases to different Exceptions: having all "RuntimeException" is very limiting in terms of error handling
  */
 public class Weapons {
+    public static final int NO_WEAPON           = -1;
+
     private static final String[] NAMES = new String[] {
         "paper",    //< 0
         "scissors", //< 1
@@ -18,9 +22,9 @@ public class Weapons {
     };
 
     private static final int[][] WINNERS = new int[][] {
-            { -1,  1,  0},  //< 0 vs: 0, 1, 2
-            {  1, -1,  2},  //< 1 vs: 0, 1, 2
-            {  0,  2, -1}   //< 2 vs: 0, 1, 2
+            { NO_WEAPON ,         1 ,         0 },  //< 0 vs: 0, 1, 2
+            {         1 , NO_WEAPON ,         2 },  //< 1 vs: 0, 1, 2
+            {         0 ,         2 , NO_WEAPON }   //< 2 vs: 0, 1, 2
     };
 
     public static void validateWeaponIdx(int weaponIdx) {

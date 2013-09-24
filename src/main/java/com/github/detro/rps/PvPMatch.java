@@ -2,10 +2,11 @@ package com.github.detro.rps;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MarkerFactory;
 
-import java.security.MessageDigest;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is a logical representation of a match between 2 players.
@@ -26,10 +27,8 @@ public class PvPMatch implements Match {
 
     private Map<String, Integer> playersAndWeapons = new HashMap<String, Integer>(2);
 
-    private static final int NO_WEAPON_YET = -1;
-
     public PvPMatch(String seed) {
-        id = sha1(seed + System.currentTimeMillis());
+        id = Utils.generateStringSHA1(seed + System.currentTimeMillis());
 
         LOG.debug(String.format("Created new Match '%s'", id));
     }
@@ -65,7 +64,7 @@ public class PvPMatch implements Match {
         }
 
         for (Map.Entry<String, Integer> playerAndWeapon : playersAndWeapons.entrySet()) {
-            if (playerAndWeapon.getValue() == NO_WEAPON_YET) {
+            if (playerAndWeapon.getValue() == Weapons.NO_WEAPON) {
                 return false;
             }
         }
@@ -78,7 +77,7 @@ public class PvPMatch implements Match {
         // Add player to the match if we can
         if ((status & WAITING_FOR_ANOTHER_PLAYER) > 0) {
             if (!containsPlayer(playerId)) {
-                playersAndWeapons.put(playerId, NO_WEAPON_YET);    //< new player has not provided hiw weapon of choice yet
+                playersAndWeapons.put(playerId, Weapons.NO_WEAPON);    //< new player has not provided hiw weapon of choice yet
             } else {
                 String errMsg = String.format("Can't add the Player '%s' twice to Match '%s'", playerId, id);
                 LOG.error(errMsg);
@@ -185,7 +184,7 @@ public class PvPMatch implements Match {
         } else if (playersAndWeapons.get(players[1]) == winningWeapon) {
             LOG.debug(String.format("Match '%s' won by Player '%s'", id, players[1]));
             return players[1];
-        } else {
+        } else { //< winningWeapon == Weapons.NO_WEAPON
             LOG.debug(String.format("Match '%s' finished in a draw", id));
             return NO_WINNER;
         }
@@ -197,7 +196,7 @@ public class PvPMatch implements Match {
         if ((status & (WAITING_PLAYERS_WEAPONS | PLAYED)) > 0) {
             // Clear Player's weapons
             for (String playerId : playersAndWeapons.keySet()) {
-                playersAndWeapons.put(playerId, NO_WEAPON_YET);
+                playersAndWeapons.put(playerId, Weapons.NO_WEAPON);
             }
 
             // Set the status back to WAITING_PLAYERS_WEAPONS
@@ -205,30 +204,5 @@ public class PvPMatch implements Match {
 
             LOG.debug(String.format("Match '%s' was reset: ready for new weapons", id));
         }
-    }
-
-    private static String sha1(String input) {
-        String result = "";
-
-        try {
-            MessageDigest digester = MessageDigest.getInstance("SHA-1");
-            digester.reset();
-            digester.update(input.getBytes("UTF-8"));
-
-            byte[] digest = digester.digest();
-
-            Formatter f = new Formatter();
-            for (int i = 0, ilen = digest.length; i < ilen; ++i) {
-                f.format("%02X", digest[i]);
-            }
-
-            result = f.toString();
-            f.close();
-        } catch (Exception e) {
-            LOG.error(MarkerFactory.getMarker("FATAL"), "Couldn't Hash a String with SHA-1");
-            System.exit(1);
-        }
-
-        return result;
     }
 }
