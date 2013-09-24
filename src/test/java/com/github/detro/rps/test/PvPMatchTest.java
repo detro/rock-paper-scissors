@@ -10,10 +10,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertNotNull;
 
-public class MatchTest {
+public class PvPMatchTest {
 
-    @DataProvider(name = "matchAndResultProvider")
-    public Object[][] matchAndResultProvider() {
+    @DataProvider(name = "pvpMatchAndResultProvider")
+    public Object[][] pvpMatchAndResultProvider() {
         return new Object[][] {
                 { "player1ID", 1, "player2ID", 0, "player1ID" },
                 { "player1ID", 1, "player2ID", 2, "player2ID" },
@@ -24,8 +24,8 @@ public class MatchTest {
         };
     }
 
-    @Test(dataProvider = "matchAndResultProvider")
-    public void shouldReturnTheCorrectMatchResult(
+    @Test(dataProvider = "pvpMatchAndResultProvider")
+    public void shouldReturnTheCorrectPvPMatchResult(
             String player1id, int player1weapon,
             String player2id, int player2weapon,
             String winner) {
@@ -52,8 +52,8 @@ public class MatchTest {
         assertEquals(match.getWinningPlayer(), winner);
     }
 
-    @Test(dataProvider = "matchAndResultProvider")
-    public void shouldReturnTheCorrectMatchResultAfterReset(
+    @Test(dataProvider = "pvpMatchAndResultProvider")
+    public void shouldReturnTheCorrectPvPMatchResultAfterReset(
             String player1id, int player1weapon,
             String player2id, int player2weapon,
             String winner) {
@@ -79,14 +79,14 @@ public class MatchTest {
     }
 
     @Test(expectedExceptions = RuntimeException.class)
-    public void shouldNotAllowToAddSamePlayerTwice() {
+    public void shouldNotAllowToAddSamePlayerTwiceToAPvPMatch() {
         Match match = new PvPMatch("seed");
         match.addPlayer("player");
         match.addPlayer("player");
     }
 
     @Test(expectedExceptions = RuntimeException.class)
-    public void shouldNotAllowToAddMoreThan2Players() {
+    public void shouldNotAllowToAddMoreThan2PlayersToAPvPMatch() {
         Match match = new PvPMatch("seed");
         match.addPlayer("player1");
         match.addPlayer("player2");
@@ -94,7 +94,7 @@ public class MatchTest {
     }
 
     @Test(expectedExceptions = RuntimeException.class)
-    public void shouldNotAllowPlayerNotInTheMatchToSetTheirWeapon() {
+    public void shouldNotAllowPlayerNotInThePvPMatchToSetTheirWeapon() {
         Match match = new PvPMatch("seed");
         match.addPlayer("player1");
         match.addPlayer("player2");
@@ -103,14 +103,14 @@ public class MatchTest {
     }
 
     @Test(expectedExceptions = RuntimeException.class)
-    public void shouldNotAllowToSetPlayerWeaponBefore2PlayersHaveBeenAdded() {
+    public void shouldNotAllowToSetPlayerWeaponBefore2PlayersHaveBeenAddedToPvPMatch() {
         Match match = new PvPMatch("seed");
         match.addPlayer("player1");
         match.setPlayerWeapon("player1", Weapons.pickRandomWeapon());
     }
 
     @Test(expectedExceptions = RuntimeException.class)
-    public void shouldNotAllowToGetMatchResultBeforeBothPlayersHaveSetTheirWeapon() {
+    public void shouldNotAllowToGetPvPMatchResultBeforeBothPlayersHaveSetTheirWeapon() {
         Match match = new PvPMatch("seed");
         match.addPlayer("player1");
         match.addPlayer("player2");

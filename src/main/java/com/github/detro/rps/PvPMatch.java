@@ -23,9 +23,9 @@ public class PvPMatch implements Match {
 
     private final String id;
 
-    private int status = NO_PLAYERS_YET;
+    protected int status = NO_PLAYERS_YET;
 
-    private Map<String, Integer> playersAndWeapons = new HashMap<String, Integer>(2);
+    protected Map<String, Integer> playersAndWeapons = new HashMap<String, Integer>(2);
 
     public PvPMatch(String seed) {
         id = Utils.generateStringSHA1(seed + System.currentTimeMillis());
@@ -191,7 +191,7 @@ public class PvPMatch implements Match {
     }
 
     @Override
-    public void reset() {
+    public synchronized void reset() {
         // Reset match only if both players are there
         if ((status & (WAITING_PLAYERS_WEAPONS | PLAYED)) > 0) {
             // Clear Player's weapons

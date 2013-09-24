@@ -2,6 +2,7 @@ package com.github.detro.rps.http;
 
 import com.github.detro.rps.GameCenter;
 import com.github.detro.rps.Match;
+import com.github.detro.rps.PvCMatch;
 import com.github.detro.rps.PvPMatch;
 
 import com.github.detro.rps.json.JSONUtils;
@@ -73,12 +74,12 @@ public class Router {
             public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
                 String kind = req.queryParams("kind");
-                Match newMatch = null;
+                Match newMatch;
 
                 if (kind == null || kind.equals("pvp")) {
                     newMatch = new PvPMatch(playerId);
                 } else if (kind.equals("pvc")) {
-                    // TODO Create a new Match type for PvC (Player vs Computer)
+                    newMatch = new PvCMatch(playerId);
                 } else {
                     LOG.error(String.format("Invalid parameter: %s=%s", "kind", kind));
                     res.status(400);
