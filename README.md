@@ -9,6 +9,12 @@ any registration/accounting.
 
 Ah, and if the server shuts down, nothing is preserved (i.e. no database in this implementation).
 
+## Screenshots
+
+![Desktop Screenshot](https://raw.github.com/detro/rock-paper-scissors/master/README.pics/desktop.png)
+
+![Mobile Screenshot](https://raw.github.com/detro/rock-paper-scissors/master/README.pics/mobile.png)
+
 ## Features
 
 * Support for Player vs Player Matches (PvP)
