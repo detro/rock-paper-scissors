@@ -16,9 +16,12 @@ Ah, and if the server shuts down, nothing is preserved (i.e. no database in this
 * Ability to restart a game when finished
 * Ability to play multiple games at the same time
 * Support for multiple screen sizes (from Desktop to Smartphone) (i.e. "Responsive" design)
+* Can be extended to support any number of weapons (see [rpsls](http://en.wikipedia.org/wiki/Rock-paper-scissors-lizard-Spock))
+  by just changing a single matrix of numbers inside the class `Weapons`
 
 ## TODO
 
+* Support for [Rock-Paper-Scissors-Lizard-Spock](http://en.wikipedia.org/wiki/Rock-paper-scissors-lizard-Spock)
 * Keep track of personal stats (won/lost/draw games)
 * Support for persistent/non-memory only games
 * Support for accounts/login
