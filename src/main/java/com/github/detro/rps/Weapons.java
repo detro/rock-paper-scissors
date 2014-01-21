@@ -18,13 +18,17 @@ public class Weapons {
     private static final String[] NAMES = new String[] {
         "paper",    //< 0
         "scissors", //< 1
-        "rock"      //< 2
+        "rock",     //< 2
+        "lizard",   //< 3
+        "spock"     //< 4
     };
 
     private static final int[][] WINNERS = new int[][] {
-            { NO_WEAPON ,         1 ,         0 },  //< 0 vs: 0, 1, 2
-            {         1 , NO_WEAPON ,         2 },  //< 1 vs: 0, 1, 2
-            {         0 ,         2 , NO_WEAPON }   //< 2 vs: 0, 1, 2
+            { NO_WEAPON ,         1 ,         0,         3,         0 },  //< 0 vs: 0, 1, 2, 3, 4
+            {         1 , NO_WEAPON ,         2,         1,         4 },  //< 1 vs: 0, 1, 2, 3, 4
+            {         0 ,         2 , NO_WEAPON,         2,         4 },  //< 2 vs: 0, 1, 2, 3, 4
+            {         3 ,         1 ,         2, NO_WEAPON,         3 },  //< 3 vs: 0, 1, 2, 3, 4
+            {         0 ,         4 ,         4,         3, NO_WEAPON }
     };
 
     public static void validateWeaponIdx(int weaponIdx) {

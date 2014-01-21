@@ -16,7 +16,13 @@ public class WeaponsTest {
         return new Object[][] {
                 {  1,  2,  2 }, // scissors vs rock => rock
                 {  2,  2, -1 }, // rock vs rock => draw,
-                {  0,  2,  0 }  // paper vs rock => paper
+                {  0,  2,  0 }, // paper vs rock => paper
+                {  3,  0,  3 },
+                {  4,  1,  4 },
+                {  2,  4,  4 },
+                {  4,  3,  3 },
+                {  4,  4, -1 },
+                {  3,  3, -1 }
         };
     }
 
@@ -25,7 +31,9 @@ public class WeaponsTest {
         return new Object[][] {
                 {  0, "paper"       },
                 {  1, "scissors"    },
-                {  2, "rock"        }
+                {  2, "rock"        },
+                {  3, "lizard"      },
+                {  4, "spock"       }
         };
     }
 
