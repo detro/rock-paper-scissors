@@ -25,7 +25,7 @@ public class PvPMatch implements Match {
 
     protected int status = NO_PLAYERS_YET;
 
-    protected Map<String, Integer> playersAndWeapons = new HashMap<String, Integer>(2);
+    protected final Map<String, Integer> playersAndWeapons = new HashMap<String, Integer>(2);
 
     public PvPMatch(String seed) {
         id = Utils.generateStringSHA1(seed + System.currentTimeMillis());

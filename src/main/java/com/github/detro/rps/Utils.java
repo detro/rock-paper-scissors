@@ -28,8 +28,8 @@ public class Utils {
             byte[] digest = digester.digest();
 
             Formatter f = new Formatter();
-            for (int i = 0, ilen = digest.length; i < ilen; ++i) {
-                f.format("%02X", digest[i]);
+            for (byte b : digest) {
+                f.format("%02X", b);
             }
 
             result = f.toString();

@@ -83,8 +83,8 @@ public class JSONUtils {
     public static final JsonElement matchesToJson(List<Match> matches, String playerId) {
         JsonArray result = new JsonArray();
 
-        for (int i = 0, ilen = matches.size(); i < ilen; ++i) {
-            result.add(matchToJson(matches.get(i), playerId));
+        for (Match m : matches) {
+            result.add(matchToJson(m, playerId));
         }
 
         return result;
