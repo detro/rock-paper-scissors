@@ -80,7 +80,7 @@ public class JSONUtils {
         return result;
     }
 
-    public static final JsonElement matchesToJson(List<Match> matches, String playerId) {
+    public static JsonElement matchesToJson(List<Match> matches, String playerId) {
         JsonArray result = new JsonArray();
 
         for (Match m : matches) {
@@ -90,7 +90,7 @@ public class JSONUtils {
         return result;
     }
 
-    public static final JsonElement weaponsToJson() {
+    public static JsonElement weaponsToJson() {
         JsonArray result = new JsonArray();
 
         for (int i = 0, ilen = Weapons.weaponsAmount(); i < ilen; ++i) {
