@@ -21,7 +21,7 @@ public class Utils {
         String result = "";
 
         try {
-            MessageDigest digester = MessageDigest.getInstance("SHA-1");
+            MessageDigest digester = MessageDigest.getInstance(algorithm);
             digester.reset();
             digester.update(input.getBytes("UTF-8"));
 
