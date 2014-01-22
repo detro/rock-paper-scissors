@@ -39,9 +39,9 @@ public class JSONUtils {
             if (match.getStatus() == Match.PLAYED) {
                 String winner = match.getWinningPlayer();
 
-                if (winner == Match.NO_WINNER) {
+                if (winner.equals(Match.NO_WINNER)) {
                     result.add("result", new JsonPrimitive(Match.NO_WINNER));
-                } else if (winner == playerId) {
+                } else if (winner.equals(playerId)) {
                     result.add("result", new JsonPrimitive("won"));
                 } else {
                     result.add("result", new JsonPrimitive("lost"));
