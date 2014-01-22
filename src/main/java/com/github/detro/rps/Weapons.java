@@ -56,8 +56,8 @@ public class Weapons {
 
     /**
      * A vs B
-     * @param weaponAIdx
-     * @param weaponBIdx
+     * @param weaponAIdx Index of the first Weapon
+     * @param weaponBIdx Index of the second Weapon
      * @return Returns -1 if it's a draw, otherwise the Index of the Winning Weapon
      */
     public static int vs(int weaponAIdx, int weaponBIdx) {
