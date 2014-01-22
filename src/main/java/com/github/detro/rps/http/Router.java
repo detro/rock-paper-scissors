@@ -48,7 +48,7 @@ public class Router {
             public void process(Request req, Response res, StringBuilder resBody) {
                 String playerId = req.session().id();
                 String type = req.queryParams("type");
-                List<Match> matches = null;
+                List<Match> matches;
 
                 // Fetch a list of matches, based on the requested type
                 if (type == null || type.equals("all")) {
@@ -99,7 +99,7 @@ public class Router {
             @Override
             public void process(Request req, Response res, StringBuilder resBody) {
                 // Fetch match info
-                Match match = null;
+                Match match;
                 try {
                     match = gameCenter.getMatch(req.params(":matchId"));
                 } catch(RuntimeException re) {
