@@ -163,7 +163,7 @@ rps.views.CurrentMatch = Backbone.View.extend({
                 canJoin         : this.model.get("canJoin"),
                 canReset        : this.model.get("canReset"),
                 canLeave        : this.model.get("canLeave")
-            }
+            };
 
             this.$el.html(this._matchContentTemplate(templateData));
         }

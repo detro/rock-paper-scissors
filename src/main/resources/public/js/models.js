@@ -39,7 +39,7 @@ rps.models.Match = Backbone.Model.extend({
     },
     setWeapon   : function(weaponId) {
         this.action({ action : "weapon", weaponId : weaponId });
-    },
+    }
 });
 
 // Collection of Matches
@@ -144,7 +144,7 @@ rps.models.Game = function() {
         if (typeof(interval) === "number") {
             refreshInterval = interval;
         }
-    }
+    };
 
     return this;
 };
