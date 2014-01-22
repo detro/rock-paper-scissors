@@ -17,10 +17,6 @@ public abstract class JSONRoute extends Route {
         super(path);
     }
 
-    public JSONRoute(String path, String acceptType) {
-        super(path, acceptType);
-    }
-
     @Override
     public Object handle(Request req, Response res) {
         // We DO use Sessions (that's how we distinguish users)
